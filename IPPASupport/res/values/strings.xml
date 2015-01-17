@@ -1,22 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Main Activity   --> 
+<!-- App -->
+    
     <string name="app_name">IPPA</string>
+    
+<!-- Main Activity   --> 
+
     <string name="title_activity_main">IPPA Main</string>
     <string name="description_connection">Unchecked</string>
     <string name="description_main_activity">This is the status of the Bluetooth Connection: </string>
-    <string name="action_settings">Settings</string>
+
     <string name="voice_command_button">Voice Command</string>
     <string name="teaching_mode_button">Teaching Mode</string>
 
-    <!-- Voice Command Activity -->
+<!-- Voice Command Activity -->
+    
     <string name="title_activity_voice_command">Voice Command</string>
     <string name="description_voice_command">The text translated is: </string>
 
-    <!-- Connection Instructions Activity -->
+<!-- Connection Instructions Activity -->
+    
     <string name="title_activity_connection_instructions">ConnectionInstructionsActivity</string>
     <string name="page_title_instructions">Instructions for Connecting to the IPPA</string>
     <string name="connection_instructions_text">Follow these instructions to connect with the system</string>
-
+    
+<!-- Teaching Mode Main Activity -->
+    
+    <string name="title_activity_teaching_mode">Teaching Mode</string>
+   
+<!-- Demo Gesture Fragment-->
+	<string name="title_fragment_demo_gesture">Demo Gesture</string>
+	
+<!-- Demo Gesture Fragment-->
+	<string name="title_fragment_create_gesture">Create Gesture</string>
+		
+	
 </resources>

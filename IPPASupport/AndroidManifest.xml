@@ -26,6 +26,14 @@
             android:name=".ConnectionInstructionsActivity"
             android:label="@string/title_activity_connection_instructions" >
         </activity>
+        <activity
+            android:name=".VoiceCommandActivity"
+            android:label="@string/title_activity_voice_command" >
+        </activity>
+        <activity
+            android:name=".TeachingModeMainActivity"
+            android:label="@string/title_activity_teaching_mode" >
+        </activity>
     </application>
 
 </manifest>
