@@ -19,5 +19,7 @@ public class CreateGestureFragment extends Fragment{
 		
 		return createGestureView;
 	}
+	
+	
 
 }

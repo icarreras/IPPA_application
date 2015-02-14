@@ -1,14 +1,19 @@
 package com.ippa.ippasupport;
 
+import com.ippa.bluetooth.Constants;
+
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.widget.Toast;
 
 public class TeachingModeMainActivity extends FragmentActivity implements ActionBar.TabListener, 
 																		ViewPager.OnPageChangeListener{
@@ -84,6 +89,58 @@ public class TeachingModeMainActivity extends FragmentActivity implements Action
         // corresponding tab.
         getActionBar().setSelectedNavigationItem(position);	
 	}
+	/*
+	/**
+     * The Handler that gets information back from the BluetoothService
+     
+    private final Handler m_Handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case Constants.MESSAGE_STATE_CHANGE:
+                    switch (msg.arg1) {
+                        case Constants.STATE_CONNECTED:
+                            setStatus(getString(R.string.title_connected_to, mConnectedDeviceName));
+                            mConversationArrayAdapter.clear();
+                            break;
+                        case Constants.STATE_CONNECTING:
+                            setStatus(R.string.title_connecting);
+                            break;
+                        case Constants.STATE_LISTEN:
+                        case Constants.STATE_NONE:
+                            setStatus(R.string.title_not_connected);
+                            break;
+                    }
+                    break;
+                case Constants.MESSAGE_WRITE:
+                    byte[] writeBuf = (byte[]) msg.obj;
+                    // construct a string from the buffer
+                    String writeMessage = new String(writeBuf);
+                    mConversationArrayAdapter.add("Me:  " + writeMessage);
+                    break;
+                case Constants.MESSAGE_READ:
+                    byte[] readBuf = (byte[]) msg.obj;
+                    // construct a string from the valid bytes in the buffer
+                    String readMessage = new String(readBuf, 0, msg.arg1);
+                    mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + readMessage);
+                    break;
+                case Constants.MESSAGE_DEVICE_NAME:
+                    // save the connected device's name
+                    mConnectedDeviceName = msg.getData().getString(Constants.DEVICE_NAME);
+                    if (null != UIActivity) {
+                        Toast.makeText(UIActivity, "Connected to "
+                                + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case Constants.MESSAGE_TOAST:
+                    if (null != UIActivity) {
+                        Toast.makeText(UIActivity, msg.getData().getString(Constants.TOAST),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+            }
+        }
+    }; */
 
 	// Custom Page Adapter Class
 	public class GestureOptionsCollectionPageAdapter extends FragmentPagerAdapter {

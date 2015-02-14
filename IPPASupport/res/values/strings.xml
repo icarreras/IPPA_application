@@ -13,7 +13,7 @@
 
     <string name="voice_command_button">Voice Command</string>
     <string name="teaching_mode_button">Teaching Mode</string>
-
+    
 <!-- Voice Command Activity -->
     
     <string name="title_activity_voice_command">Voice Command</string>
@@ -35,5 +35,11 @@
 <!-- Demo Gesture Fragment-->
 	<string name="title_fragment_create_gesture">Create Gesture</string>
 		
-	
+
+<!-- Bluetooth Connection Setup -->
+	<string name="bt_setup_quit">Quit</string>
+	<string name="bt_setup_enable_failed_message">The application failed to enable the device\'s bluetooth. 
+	    IPPA will not be able to continue executing</string>
+	<string name="bt_setup_failed_title">Bluetooth Connection Failed</string>
+
 </resources>
