@@ -1,5 +1,7 @@
 package com.ippa.ippasupport;
 
+import com.ippa.R;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;

@@ -5,7 +5,7 @@ import java.util.UUID;
 public class Constants {
 	
 	public static final String CONNECTION_NAME = "IPPA Mobile";
-	public static final UUID MY_UUID_SECURE = UUID.fromString("8ecad208-b3be-11e4-a71e-12e3f512a338");
+	public static final UUID MY_UUID_SECURE = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 	//public static final UUID MY_UUID_INSECURE = UUID.fromString("434908f8-b3c4-11e4-a71e-12e3f512a338");
 	
 	
@@ -17,7 +17,7 @@ public class Constants {
     public static final int MESSAGE_TOAST = 5;
 
     // Key names received from the BluetoothService Handler
-    public static final String DEVICE_NAME = "Nexus 4";
+    public static final String DEVICE_NAME = "HC-06";
     public static final String TOAST = "toast";
     
     // Constants that indicate the current connection state
@@ -27,8 +27,8 @@ public class Constants {
     public static final int STATE_CONNECTED = 3;  // now connected to a remote device
     
 	// Intent request codes
-    public static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
-    public static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
+    public static final int REQUEST_DISCOVER_DEVICE = 1;
     public static final int REQUEST_ENABLE_BT = 3;
+    
     
 }

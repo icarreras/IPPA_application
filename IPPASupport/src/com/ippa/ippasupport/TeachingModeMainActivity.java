@@ -1,5 +1,6 @@
 package com.ippa.ippasupport;
 
+import com.ippa.R;
 import com.ippa.bluetooth.Constants;
 
 import android.app.ActionBar;

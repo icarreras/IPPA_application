@@ -1,5 +1,8 @@
 package com.ippa.ippasupport;
 
+import java.util.UUID;
+
+import com.ippa.R;
 import com.ippa.bluetooth.BluetoothService;
 import com.ippa.bluetooth.BluetoothSetup;
 import com.ippa.bluetooth.Constants;
@@ -13,6 +16,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.ParcelUuid;
+import android.util.Log;
 import android.view.View;
 import android.widget.*;
 
@@ -22,6 +27,7 @@ public class MainActivity extends Activity {
     private BluetoothService m_ChatService = null;
 	private BluetoothAdapter m_bluetoothAdapter = null;
 	private BluetoothSetup m_bluetoothSetup;
+	private UUID m_foundUuid;
 	
 	private TextView textViewConnectionStatus;
 	
@@ -36,6 +42,8 @@ public class MainActivity extends Activity {
         final Button buttonTeachingMode = (Button) findViewById(R.id.teach_mode_button);
         final Button buttonConnect = (Button) findViewById(R.id.button1);
         textViewConnectionStatus = (TextView) findViewById(R.id.connection_status);
+        
+        m_bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         
         
         // TODO: Maybe we will need to pass some info about Bluetooth through these intents
@@ -63,32 +71,29 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
+				
+				// TODO: MOVE ALL OF THIS TO THE BLUETOOTHSETUPACTIVITY
 				m_bluetoothSetup = new BluetoothSetup(MainActivity.this);
 		        
 		    	// Verify that the Bluetooth is enabled
 		        if(m_bluetoothSetup.setup() == Constants.STATE_NONE)
 		        {
-		        	showCommNotPossibleDialog();
+		        	showCommNotPossibleDialog("This device does not have Bluetooth capabilities");
 		        }
 		        
 		        // Find device to connect
-		        m_bluetoothSetup.findIppaDevice();
+		        boolean pairedDevice = m_bluetoothSetup.findIppaDevice();
+		        if(pairedDevice)
+		        {
+		        	startBluetooth();
+		        }
+		        // Otherwise wait for the activity searching to finish and return the result
 		        
-		        // Handle the case where the device is not found
-		        if(!m_bluetoothSetup.isDevicePresent())
-		        {
-		        	// Show dialog that the device was not found
-		        	showCommNotPossibleDialog(); // TODO: CHANGE DIALOG
-		        }
-		        else
-		        {
-			        // Continue to connect
-			        startBluetooth();
-		        }
 			}
 		});
         
     }
+    
     
     @Override
     public void onDestroy() {
@@ -114,17 +119,40 @@ public class MainActivity extends Activity {
         }
     }
     
-    private void startBluetooth() {
-        // Initialize the BluetoothService to perform bluetooth connections
-        m_ChatService = new BluetoothService(this);
-        m_ChatService.setHandler(m_handler);
-        
-        // connect device
-        String address = m_bluetoothSetup.getAddress(); 
-        // Get the BluetoothDevice object
-        BluetoothDevice device = m_bluetoothAdapter.getRemoteDevice(address);
-        // Attempt to connect to the device
-        m_ChatService.connect(device);
+    private void startBluetooth() { 
+    	
+    	// Handle the case where the device is not found
+        if(!m_bluetoothSetup.isDevicePresent())
+        {
+        	// Show dialog that the device was not found
+        	showCommNotPossibleDialog("The device is not found in the near area"); // TODO: CHANGE DIALOG
+        }
+        else
+        {
+        	//Initialize the BluetoothService to perform bluetooth connections
+            m_ChatService = new BluetoothService(this);
+            m_ChatService.setHandler(m_handler);
+            
+            // connect device
+            String address = m_bluetoothSetup.getAddress();
+            //String address = new String("C4:43:8F:01:EF:F5"); // nexus
+            //address = new String("30:75:12:D5:AE:9C"); // xperia
+            //String address = new String("46:73:6E:32:18:21"); // laptop
+            // Get the BluetoothDevice object
+            BluetoothDevice device = m_bluetoothAdapter.getRemoteDevice(address);
+            
+            // get supported uuid services
+            if(device.fetchUuidsWithSdp())
+            {
+            	//Toast.makeText(MainActivity.this, "true", Toast.LENGTH_SHORT).show();
+            	ParcelUuid[] uuids = device.getUuids();
+            	m_foundUuid = uuids[0].getUuid();
+            	
+            }
+            
+            m_ChatService.connect(device, m_foundUuid);
+        }
+    	
     }  
     
     /*
@@ -139,17 +167,33 @@ public class MainActivity extends Activity {
     	switch(requestCode)
     	{
 			case Constants.REQUEST_ENABLE_BT:
+			{
 				if(resultCode == RESULT_CANCELED)
 				{
 					// The user didn't allow the Bluetooth to be enabled
 					// Can't use our application
 		        	// Pop up a message and the only button should say "quit"
-					showCommNotPossibleDialog();
+					showCommNotPossibleDialog("The user did not allow Bluetooth Enabling");
 				}
 				break;
+			}
+			case Constants.REQUEST_DISCOVER_DEVICE:
+			{
+				String address = null;
+				if(resultCode == RESULT_OK)
+				{
+					// Get device address
+					address = data.getExtras()
+			                .getString(DeviceDiscoveryActivity.EXTRA_DEVICE_ADDRESS);
+				}
+				
+				m_bluetoothSetup.setAddress(address);
+				
+				// Start Bluetooth connection
+				startBluetooth();
+				break;
+			}
     	}
-    	
-    
     }
     
     
@@ -201,11 +245,11 @@ public class MainActivity extends Activity {
     
     
 
-    private void showCommNotPossibleDialog()
+    private void showCommNotPossibleDialog(String message)
     {
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		
-		builder.setMessage(R.string.bt_setup_enable_failed_message)
+		builder.setMessage(message)
 				.setTitle(R.string.bt_setup_failed_title);
 		builder.setNegativeButton(R.string.bt_setup_quit, new DialogInterface.OnClickListener() {
 			
@@ -219,6 +263,7 @@ public class MainActivity extends Activity {
 		
 		AlertDialog dialog = builder.create();
 		dialog.show();
+
     }
    
 }

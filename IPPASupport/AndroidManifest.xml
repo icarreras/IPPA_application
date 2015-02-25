@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ippa.ippasupport"
+    package="com.ippa"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -18,7 +18,7 @@
         android:theme="@style/AppTheme">
         
         <activity
-            android:name=".MainActivity"
+            android:name=".ippasupport.MainActivity"
             android:label="@string/title_activity_main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,17 +27,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ConnectionInstructionsActivity"
+            android:name=".ippasupport.ConnectionInstructionsActivity"
             android:label="@string/title_activity_connection_instructions" >
         </activity>
         <activity
-            android:name=".VoiceCommandActivity"
+            android:name=".ippasupport.VoiceCommandActivity"
             android:label="@string/title_activity_voice_command" >
         </activity>
         <activity
-            android:name=".TeachingModeMainActivity"
+            android:name=".ippasupport.TeachingModeMainActivity"
             android:label="@string/title_activity_teaching_mode" >
         </activity>
+        <activity 
+            android:name=".ippasupport.DeviceDiscoveryActivity"
+            android:label="Pick device">
+        </activity>
+        
     </application>
 
 </manifest>
