@@ -1,4 +1,4 @@
-package com.ippa.ippasupport;
+package com.ippa.managementsystem;
 
 import java.util.UUID;
 
@@ -24,14 +24,13 @@ import android.widget.*;
 
 public class MainActivity extends Activity {
 
-    private BluetoothService m_ChatService = null;
+    private BluetoothService m_bluetoothService = null;
 	private BluetoothAdapter m_bluetoothAdapter = null;
 	private BluetoothSetup m_bluetoothSetup;
 	private UUID m_foundUuid;
 	
 	private TextView textViewConnectionStatus;
 	
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
@@ -41,9 +40,11 @@ public class MainActivity extends Activity {
         final Button buttonVoiceCommand = (Button) findViewById(R.id.voice_command_button);
         final Button buttonTeachingMode = (Button) findViewById(R.id.teach_mode_button);
         final Button buttonConnect = (Button) findViewById(R.id.button1);
+        final Button buttonSend = (Button) findViewById(R.id.button2);
         textViewConnectionStatus = (TextView) findViewById(R.id.connection_status);
         
         m_bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        
         
         
         // TODO: Maybe we will need to pass some info about Bluetooth through these intents
@@ -52,7 +53,18 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(MainActivity.this, VoiceCommandActivity.class);
+
 				startActivity(intent);
+				
+			}
+		});
+        
+        buttonSend.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				String test = "Ivette";
+				m_bluetoothService.write(test.getBytes());
 				
 			}
 		});
@@ -98,8 +110,8 @@ public class MainActivity extends Activity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (m_ChatService != null) {
-            m_ChatService.stop();
+        if (m_bluetoothService != null) {
+            m_bluetoothService.stop();
         }
     }
     
@@ -110,11 +122,11 @@ public class MainActivity extends Activity {
         // Performing this check in onResume() covers the case in which BT was
         // not enabled during onStart(), so we were paused to enable it...
         // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
-        if (m_ChatService != null) {
+        if (m_bluetoothService != null) {
             // Only if the state is STATE_NONE, do we know that we haven't started already
-            if (m_ChatService.getState() == Constants.STATE_NONE) {
+            if (m_bluetoothService.getState() == Constants.STATE_NONE) {
                 // Start the Bluetooth chat services
-                m_ChatService.start();
+                m_bluetoothService.start();
             }
         }
     }
@@ -129,9 +141,8 @@ public class MainActivity extends Activity {
         }
         else
         {
-        	//Initialize the BluetoothService to perform bluetooth connections
-            m_ChatService = new BluetoothService(this);
-            m_ChatService.setHandler(m_handler);
+        	m_bluetoothService = new BluetoothService(this);
+            m_bluetoothService.setHandler(m_handler);
             
             // connect device
             String address = m_bluetoothSetup.getAddress();
@@ -142,15 +153,16 @@ public class MainActivity extends Activity {
             BluetoothDevice device = m_bluetoothAdapter.getRemoteDevice(address);
             
             // get supported uuid services
-            if(device.fetchUuidsWithSdp())
+            m_foundUuid = Constants.MY_UUID_SECURE;
+            /*if(device.fetchUuidsWithSdp())
             {
             	//Toast.makeText(MainActivity.this, "true", Toast.LENGTH_SHORT).show();
             	ParcelUuid[] uuids = device.getUuids();
             	m_foundUuid = uuids[0].getUuid();
             	
-            }
+            }*/
             
-            m_ChatService.connect(device, m_foundUuid);
+            m_bluetoothService.connect(device, m_foundUuid);
         }
     	
     }  

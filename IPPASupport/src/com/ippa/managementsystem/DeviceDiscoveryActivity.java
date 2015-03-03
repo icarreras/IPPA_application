@@ -1,4 +1,4 @@
-package com.ippa.ippasupport;
+package com.ippa.managementsystem;
 
 
 import com.ippa.bluetooth.Constants;

@@ -5,7 +5,8 @@ import java.util.Set;
 
 
 
-import com.ippa.ippasupport.DeviceDiscoveryActivity;
+
+import com.ippa.managementsystem.DeviceDiscoveryActivity;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;

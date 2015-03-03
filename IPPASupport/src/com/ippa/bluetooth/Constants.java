@@ -6,7 +6,6 @@ public class Constants {
 	
 	public static final String CONNECTION_NAME = "IPPA Mobile";
 	public static final UUID MY_UUID_SECURE = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-	//public static final UUID MY_UUID_INSECURE = UUID.fromString("434908f8-b3c4-11e4-a71e-12e3f512a338");
 	
 	
 	// Message types sent from the BluetoothService Handler
@@ -17,7 +16,7 @@ public class Constants {
     public static final int MESSAGE_TOAST = 5;
 
     // Key names received from the BluetoothService Handler
-    public static final String DEVICE_NAME = "HC-06";
+    public static final String DEVICE_NAME = "LENOVO";
     public static final String TOAST = "toast";
     
     // Constants that indicate the current connection state

@@ -14,9 +14,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
-public class BluetoothService {
+public class BluetoothService{
 
     // Member fields
 	private final String TAG = "BT_Service";
@@ -85,12 +87,6 @@ public class BluetoothService {
         }
 
         setState(Constants.STATE_LISTEN);
-
-        // Start the thread to listen on a BluetoothServerSocket
-        /*if (mSecureAcceptThread == null) {
-            mSecureAcceptThread = new AcceptThread(true);
-            mSecureAcceptThread.start();
-        }*/
          
     }
     
@@ -147,12 +143,6 @@ public class BluetoothService {
             mConnectedThread = null;
         }
 
-        // Cancel the accept thread because we only want to connect to one device
-        /*if (mSecureAcceptThread != null) {
-            mSecureAcceptThread.cancel();
-            mSecureAcceptThread = null;
-        }*/
-
         // Start the thread to manage the connection and perform transmissions
         mConnectedThread = new ConnectedThread(socket, socketType);
         mConnectedThread.start();
@@ -181,11 +171,6 @@ public class BluetoothService {
             mConnectedThread.cancel();
             mConnectedThread = null;
         }
-
-        /*if (mSecureAcceptThread != null) {
-            mSecureAcceptThread.cancel();
-            mSecureAcceptThread = null;
-        }*/
 
         setState(Constants.STATE_NONE);
     }
@@ -238,83 +223,6 @@ public class BluetoothService {
         BluetoothService.this.start();
     }
 
-    /**
-     * This thread runs while listening for incoming connections. It behaves
-     * like a server-side client. It runs until a connection is accepted
-     * (or until cancelled).
-     * Server side: it opens the server socket and gets a socket for the connection.
-     * It also sets the UUID required by the client for the connection
-     */
-    /*private class AcceptThread extends Thread {
-        // The local server socket
-        private final BluetoothServerSocket mmServerSocket;
-        private String mSocketType;
-
-        public AcceptThread(boolean secure) {
-            BluetoothServerSocket tmp = null;
-            mSocketType = secure ? "Secure" : "Insecure";
-
-            // Create a new listening server socket
-            try {
-                tmp = mAdapter.listenUsingRfcommWithServiceRecord(Constants.CONNECTION_NAME,
-                        Constants.MY_UUID_SECURE);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            mmServerSocket = tmp;
-        }
-
-        public void run() {
-            setName("AcceptThread" + mSocketType);
-
-            BluetoothSocket socket = null;
-
-            // Listen to the server socket if we're not connected
-            while (mState != Constants.STATE_CONNECTED) {
-                try {
-                    // This is a blocking call and will only return on a
-                    // successful connection or an exception
-                    socket = mmServerSocket.accept();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    break;
-                }
-
-                // If a connection was accepted
-                if (socket != null) {
-                    synchronized (BluetoothService.this) {
-                        switch (mState) {
-                            case Constants.STATE_LISTEN:
-                            case Constants.STATE_CONNECTING:
-                                // Situation normal. Start the connected thread.
-                                connected(socket, socket.getRemoteDevice(),
-                                        mSocketType);
-                                break;
-                            case Constants.STATE_NONE:
-                            case Constants.STATE_CONNECTED:
-                                // Either not ready or already connected. Terminate new socket.
-                                try {
-                                    socket.close();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                                break;
-                        }
-                    }
-                }
-            }
-        }
-
-        public void cancel() {
-            // will be called once the connection is accepted
-            try {
-                mmServerSocket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-*/
     
     /**
      * This thread runs while attempting to make an outgoing connection
