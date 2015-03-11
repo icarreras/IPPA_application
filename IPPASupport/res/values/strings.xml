@@ -19,19 +19,16 @@
     <string name="title_activity_voice_command">Voice Command</string>
     <string name="description_voice_command">The text translated is: </string>
     <string name="voice_connection_status">Not Checked</string>
-
-<!-- Connection Instructions Activity -->
-    
-    <string name="title_activity_connection_instructions">ConnectionInstructionsActivity</string>
-    <string name="page_title_instructions">Instructions for Connecting to the IPPA</string>
-    <string name="connection_instructions_text">Follow these instructions to connect with the system</string>
-    
+    <string name="voice_speech_init">No Command</string>
+   
 <!-- Teaching Mode Main Activity -->
     
     <string name="title_activity_teaching_mode">Teaching Mode</string>
    
 <!-- Demo Gesture Fragment-->
 	<string name="title_fragment_demo_gesture">Demo Gesture</string>
+	<string name="title_demo_inmobile">Gestures in Mobile</string>
+	<string name="title_demo_inarm">Gestures in Arm</string>
 	
 <!-- Demo Gesture Fragment-->
 	<string name="title_fragment_create_gesture">Create Gesture</string>

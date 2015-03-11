@@ -16,7 +16,7 @@ public class Constants {
     public static final int MESSAGE_TOAST = 5;
 
     // Key names received from the BluetoothService Handler
-    public static final String DEVICE_NAME = "LENOVO";
+    public static final String DEVICE_NAME = "HC-06";
     public static final String TOAST = "toast";
     
     // Constants that indicate the current connection state

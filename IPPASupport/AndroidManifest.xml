@@ -32,7 +32,7 @@
             android:label="@string/title_activity_voice_command" >
         </activity>
         <activity
-            android:name="com.ippa.managementsystem.TeachingModeMainActivityeMainActivity"
+            android:name="com.ippa.managementsystem.TeachingModeMainActivity"
             android:label="@string/title_activity_teaching_mode" >
         </activity>
         <activity 

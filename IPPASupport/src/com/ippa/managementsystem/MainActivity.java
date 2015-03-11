@@ -9,6 +9,7 @@ import com.ippa.bluetooth.Constants;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
@@ -28,6 +29,7 @@ public class MainActivity extends Activity {
 	private BluetoothAdapter m_bluetoothAdapter = null;
 	private BluetoothSetup m_bluetoothSetup;
 	private UUID m_foundUuid;
+	protected IppaApplication app;
 	
 	private TextView textViewConnectionStatus;
 	
@@ -43,9 +45,13 @@ public class MainActivity extends Activity {
         final Button buttonSend = (Button) findViewById(R.id.button2);
         textViewConnectionStatus = (TextView) findViewById(R.id.connection_status);
         
-        m_bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        // Get reference to the global data (BT)
+        app = (IppaApplication) getApplicationContext();
         
+		m_bluetoothSetup = new BluetoothSetup(MainActivity.this);
         
+    	// Verify that the Bluetooth is enabled
+		m_bluetoothSetup.setup();
         
         // TODO: Maybe we will need to pass some info about Bluetooth through these intents
         buttonVoiceCommand.setOnClickListener(new View.OnClickListener() {
@@ -63,7 +69,7 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				String test = "Ivette";
+				String test = "IvetteIvetteIvetteee";
 				m_bluetoothService.write(test.getBytes());
 				
 			}
@@ -85,10 +91,7 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				
 				// TODO: MOVE ALL OF THIS TO THE BLUETOOTHSETUPACTIVITY
-				m_bluetoothSetup = new BluetoothSetup(MainActivity.this);
-		        
-		    	// Verify that the Bluetooth is enabled
-		        if(m_bluetoothSetup.setup() == Constants.STATE_NONE)
+				if(m_bluetoothSetup.getState() == Constants.STATE_NONE)
 		        {
 		        	showCommNotPossibleDialog("This device does not have Bluetooth capabilities");
 		        }
@@ -118,6 +121,9 @@ public class MainActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();
+        
+        // TODO: Determine behavior to reconnect 
+        // this needs to be moved to the service object
 
         // Performing this check in onResume() covers the case in which BT was
         // not enabled during onStart(), so we were paused to enable it...
@@ -126,7 +132,7 @@ public class MainActivity extends Activity {
             // Only if the state is STATE_NONE, do we know that we haven't started already
             if (m_bluetoothService.getState() == Constants.STATE_NONE) {
                 // Start the Bluetooth chat services
-                m_bluetoothService.start();
+/*                m_bluetoothService.start();*/
             }
         }
     }
@@ -144,25 +150,10 @@ public class MainActivity extends Activity {
         	m_bluetoothService = new BluetoothService(this);
             m_bluetoothService.setHandler(m_handler);
             
-            // connect device
-            String address = m_bluetoothSetup.getAddress();
-            //String address = new String("C4:43:8F:01:EF:F5"); // nexus
-            //address = new String("30:75:12:D5:AE:9C"); // xperia
-            //String address = new String("46:73:6E:32:18:21"); // laptop
-            // Get the BluetoothDevice object
-            BluetoothDevice device = m_bluetoothAdapter.getRemoteDevice(address);
-            
             // get supported uuid services
-            m_foundUuid = Constants.MY_UUID_SECURE;
-            /*if(device.fetchUuidsWithSdp())
-            {
-            	//Toast.makeText(MainActivity.this, "true", Toast.LENGTH_SHORT).show();
-            	ParcelUuid[] uuids = device.getUuids();
-            	m_foundUuid = uuids[0].getUuid();
-            	
-            }*/
+            m_foundUuid = Constants.MY_UUID_SECURE; //TODO: eliminate the need to specify uuid every where
             
-            m_bluetoothService.connect(device, m_foundUuid);
+            m_bluetoothService.connect(m_bluetoothSetup.getDevice(), m_foundUuid);
         }
     	
     }  
@@ -199,7 +190,7 @@ public class MainActivity extends Activity {
 			                .getString(DeviceDiscoveryActivity.EXTRA_DEVICE_ADDRESS);
 				}
 				
-				m_bluetoothSetup.setAddress(address);
+				m_bluetoothSetup.setDevice(address);
 				
 				// Start Bluetooth connection
 				startBluetooth();

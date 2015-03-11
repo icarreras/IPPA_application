@@ -1,5 +1,7 @@
 package com.ippa.managementsystem;
 
+import java.util.ArrayList;
+
 import com.ippa.R;
 import com.ippa.bluetooth.Constants;
 
@@ -14,20 +16,41 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.widget.Toast;
 
 public class TeachingModeMainActivity extends FragmentActivity implements ActionBar.TabListener, 
 																		ViewPager.OnPageChangeListener{
 
+	private final String TAG = "Teaching Mode Activity";
+	
 	// Use custom PageAdapter to get correct Fragment based on position 
-	GestureOptionsCollectionPageAdapter mPageAdapter;
-	ViewPager mViewPager;
+	private GestureOptionsCollectionPageAdapter mPageAdapter;
+	private ViewPager mViewPager;
+	
+	// List of loaded/modified gestures
+	protected ArrayList<Gesture> m_inMobileGesture;
+	protected ArrayList<Gesture> m_inArmGesture;
 	
 	protected void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
     	setContentView(R.layout.activity_teaching_mode);
     	
     	final ActionBar actionBar = getActionBar();
+    	
+    	// Initialize gestures
+    	m_inMobileGesture = new ArrayList<Gesture>();
+    	m_inArmGesture = new ArrayList<Gesture>();
+    	
+    	// TODO: Load the gestures stored in the phone
+    	Gesture g1 = new Gesture();
+    	g1.setGestureName("Gesture1");
+    	Gesture g2 = new Gesture();
+    	g2.setGestureName("GestureInArm2");
+    	m_inMobileGesture.add(g1);
+    	m_inArmGesture.add(g2);
+    	
+    	// TODO: Load the gestures stored in the arm
     	
     	// ViewPager and its adapters use support library
         // fragments, so use getSupportFragmentManager.
@@ -90,7 +113,8 @@ public class TeachingModeMainActivity extends FragmentActivity implements Action
         // corresponding tab.
         getActionBar().setSelectedNavigationItem(position);	
 	}
-	/*
+	/* TODO: set this handler for the bluetooth at this point
+	 * A small bar with the connection status, for both fragments
 	/**
      * The Handler that gets information back from the BluetoothService
      
@@ -142,6 +166,57 @@ public class TeachingModeMainActivity extends FragmentActivity implements Action
             }
         }
     }; */
+	
+	public ArrayList<Gesture> getGesturesInMobile()
+	{
+		return m_inMobileGesture;
+	}
+	
+	public ArrayList<Gesture> getGesturesInArm()
+	{
+		return m_inArmGesture;
+	}
+	
+	public void addGestureToMobile(Gesture gesture)
+	{
+		m_inMobileGesture.add(gesture);
+	}
+	
+	public boolean deleteGestureInMobile(int position)
+	{
+		try
+		{
+			m_inMobileGesture.remove(position);
+			return true;
+		}
+		catch(IndexOutOfBoundsException e)
+		{
+			Log.e(TAG,"The gesture index to delete is out of bounds. index = " + position);
+			return false;
+		}
+	}
+	
+	public void addGestureToArm(Gesture gesture)
+	{
+		// TODO: must be sent to the arm
+		m_inArmGesture.add(gesture);
+	}
+	
+	public boolean deleteGestureInArm(int position)
+	{
+		try
+		{
+			// TODO: must send the request to the arm
+			// Notes: use the position in the gesture -> built in the package interface
+			m_inArmGesture.remove(position);
+			return true;
+		}
+		catch(IndexOutOfBoundsException e)
+		{
+			Log.e(TAG,"The gesture index to delete is out of bounds. index = " + position);
+			return false;
+		}
+	}
 
 	// Custom Page Adapter Class
 	public class GestureOptionsCollectionPageAdapter extends FragmentPagerAdapter {

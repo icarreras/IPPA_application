@@ -18,8 +18,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+// This class will be singleton class
 public class BluetoothService{
-
+	
     // Member fields
 	private final String TAG = "BT_Service";
     private final BluetoothAdapter mAdapter;
@@ -43,7 +44,7 @@ public class BluetoothService{
         m_handler = null;
         m_uuid = Constants.MY_UUID_SECURE;
     }
-
+    
     public void setHandler(Handler handler)
     {
     	m_handler = handler;
@@ -66,28 +67,6 @@ public class BluetoothService{
      */
     public synchronized int getState() {
         return mState;
-    }
-
-    /**
-     * Start the chat service. Specifically start AcceptThread to begin a
-     * session in listening (server) mode. Called by the Activity onResume()
-     */
-    public synchronized void start() {
-
-        // Cancel any thread attempting to make a connection
-        if (m_ConnectThread != null) {
-            m_ConnectThread.cancel();
-            m_ConnectThread = null;
-        }
-
-        // Cancel any thread currently running a connection
-        if (mConnectedThread != null) {
-            mConnectedThread.cancel();
-            mConnectedThread = null;
-        }
-
-        setState(Constants.STATE_LISTEN);
-         
     }
     
 
@@ -203,9 +182,6 @@ public class BluetoothService{
         bundle.putString(Constants.TOAST, "Unable to connect device");
         msg.setData(bundle);
         m_handler.sendMessage(msg);
-
-        // Start the service over to restart listening mode
-        BluetoothService.this.start();
     }
 
     /**
@@ -218,9 +194,6 @@ public class BluetoothService{
         bundle.putString(Constants.TOAST, "Device connection was lost");
         msg.setData(bundle);
         m_handler.sendMessage(msg);
-
-        // Start the service over to restart listening mode
-        BluetoothService.this.start();
     }
 
     
@@ -244,7 +217,7 @@ public class BluetoothService{
             // Get a BluetoothSocket for a connection with the
             // given BluetoothDevice
             try {
-                tmp = device.createRfcommSocketToServiceRecord(m_uuid);
+                tmp = device.createRfcommSocketToServiceRecord(Constants.MY_UUID_SECURE);
 			} catch (IOException e) {
 				Log.e(TAG, "Error creating socket");
 				Log.e(TAG, e.toString());
@@ -352,8 +325,6 @@ public class BluetoothService{
                 	Log.e(TAG, e.toString());
                 	e.printStackTrace();
                     connectionLost();
-                    // Start the service over to restart listening mode
-                    BluetoothService.this.start();
                     break;
                 }
             }

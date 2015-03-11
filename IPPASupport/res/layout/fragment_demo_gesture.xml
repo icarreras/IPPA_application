@@ -1,13 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-     xmlns:android="http://schemas.android.com/apk/res/android"
-     android:id="@+id/ScrollView"
-     android:layout_width="match_parent"
-     android:layout_height="match_parent"
-     android:orientation="vertical" 
-     android:keepScreenOn="true"
-     android:background="@color/Coral">
-     
-    
-    
-</ScrollView>
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+	<TextView
+	    android:id="@+id/tittle_in_mobile"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:background="#666"
+	    android:paddingLeft="5dp"
+	    android:paddingRight="5dp"
+	    android:text="@string/title_demo_inmobile"
+	    android:textColor="#fff"
+	    android:textSize="15sp"
+	    android:textStyle="bold"
+	    
+	    />
+	
+	<ListView
+	    android:id="@+id/mobile_gestures"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="1"
+	    android:divider="@color/PowderBlue"
+	    android:dividerHeight="5dp"
+	    />
+	
+	<TextView
+	    android:id="@+id/title_in_arm"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:background="#666"
+	    android:paddingLeft="5dp"
+	    android:paddingRight="5dp"
+	    android:text="@string/title_demo_inarm"
+	    android:textColor="#fff"
+	    android:textSize="15sp"
+	    android:textStyle="bold"
+	    />
+	
+	<ListView
+	    android:id="@+id/arm_gestures"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="1"
+	    android:divider="@color/PowderBlue"
+	    android:dividerHeight="5dp"
+	    />
+ </LinearLayout>
