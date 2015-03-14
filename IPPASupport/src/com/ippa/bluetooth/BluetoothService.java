@@ -29,7 +29,6 @@ public class BluetoothService{
     private ConnectThread m_ConnectThread;
     private ConnectedThread mConnectedThread;
     private int mState;
-    private UUID m_uuid;
 
 
     /**
@@ -42,7 +41,6 @@ public class BluetoothService{
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = Constants.STATE_NONE;
         m_handler = null;
-        m_uuid = Constants.MY_UUID_SECURE;
     }
     
     public void setHandler(Handler handler)
@@ -76,9 +74,8 @@ public class BluetoothService{
      * @param device The BluetoothDevice to connect
      * @param secure Socket Security type - Secure (true) , Insecure (false)
      */
-    public synchronized void connect(BluetoothDevice device, UUID uuid) {
+    public synchronized void connect(BluetoothDevice device) {
         // Cancel any thread attempting to make a connection
-    	m_uuid = uuid;
     	
         if (mState == Constants.STATE_CONNECTING) {
             if (m_ConnectThread != null) {

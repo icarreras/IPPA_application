@@ -7,7 +7,9 @@ import com.ippa.bluetooth.Constants;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
+import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,6 +19,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class TeachingModeMainActivity extends FragmentActivity implements ActionBar.TabListener, 
@@ -27,6 +30,7 @@ public class TeachingModeMainActivity extends FragmentActivity implements Action
 	// Use custom PageAdapter to get correct Fragment based on position 
 	private GestureOptionsCollectionPageAdapter mPageAdapter;
 	private ViewPager mViewPager;
+	private TextView m_bluetoothStatus;
 	
 	// List of loaded/modified gestures
 	protected ArrayList<Gesture> m_inMobileGesture;
@@ -36,21 +40,9 @@ public class TeachingModeMainActivity extends FragmentActivity implements Action
     	super.onCreate(savedInstanceState);
     	setContentView(R.layout.activity_teaching_mode);
     	
-    	final ActionBar actionBar = getActionBar();
-    	
-    	// Initialize gestures
-    	m_inMobileGesture = new ArrayList<Gesture>();
-    	m_inArmGesture = new ArrayList<Gesture>();
-    	
-    	// TODO: Load the gestures stored in the phone
-    	Gesture g1 = new Gesture();
-    	g1.setGestureName("Gesture1");
-    	Gesture g2 = new Gesture();
-    	g2.setGestureName("GestureInArm2");
-    	m_inMobileGesture.add(g1);
-    	m_inArmGesture.add(g2);
-    	
-    	// TODO: Load the gestures stored in the arm
+    	final ActionBar actionBar = getActionBar();	
+    	m_bluetoothStatus = (TextView)findViewById(R.id.bt_connection_status_view);
+
     	
     	// ViewPager and its adapters use support library
         // fragments, so use getSupportFragmentManager.
@@ -72,6 +64,24 @@ public class TeachingModeMainActivity extends FragmentActivity implements Action
         			.setText(mPageAdapter.getPageTitle(i))
         			.setTabListener(this));
         }
+    	
+        
+        // GESTURE LOADING
+
+    	m_inMobileGesture = new ArrayList<Gesture>();
+    	m_inArmGesture = new ArrayList<Gesture>();
+    	
+    	// TODO: Load the gestures stored in the phone
+    	// TODO: Load the gestures stored in the arm
+    	Gesture g1 = new Gesture();
+    	g1.setGestureName("Gesture1");
+    	Gesture g2 = new Gesture();
+    	g2.setGestureName("GestureInArm2");
+    	m_inMobileGesture.add(g1);
+    	m_inArmGesture.add(g2);
+    	
+    	
+        
 	}
 
 	@Override
@@ -113,27 +123,44 @@ public class TeachingModeMainActivity extends FragmentActivity implements Action
         // corresponding tab.
         getActionBar().setSelectedNavigationItem(position);	
 	}
-	/* TODO: set this handler for the bluetooth at this point
-	 * A small bar with the connection status, for both fragments
-	/**
-     * The Handler that gets information back from the BluetoothService
+	
+	public void onPaused()
+	{
+		// save changes that need to be made to the gesture file in the system
+	}
+	
+	public void onDestroy()
+	{
+		// inform system that teaching mode is over
+		// do not disconnect
+	}
+	
+    /**
+     * Updates the status on the action bar.
+     *
+     * @param subTitle status
+     */
+    private void setStatus(CharSequence status, int color) 
+    {
+    	m_bluetoothStatus.setText(status);
+    	m_bluetoothStatus.setTextColor(color);
+    }
      
-    private final Handler m_Handler = new Handler() {
+    private final Handler m_Handler = new Handler() 
+    {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case Constants.MESSAGE_STATE_CHANGE:
                     switch (msg.arg1) {
                         case Constants.STATE_CONNECTED:
-                            setStatus(getString(R.string.title_connected_to, mConnectedDeviceName));
-                            mConversationArrayAdapter.clear();
+                            setStatus(getString(R.string.title_connected_to), Color.GREEN);
                             break;
                         case Constants.STATE_CONNECTING:
-                            setStatus(R.string.title_connecting);
+                            setStatus(getString(R.string.title_connecting), Color.YELLOW);
                             break;
-                        case Constants.STATE_LISTEN:
                         case Constants.STATE_NONE:
-                            setStatus(R.string.title_not_connected);
+                            setStatus(getString(R.string.title_not_connected), Color.RED);
                             break;
                     }
                     break;
@@ -141,31 +168,31 @@ public class TeachingModeMainActivity extends FragmentActivity implements Action
                     byte[] writeBuf = (byte[]) msg.obj;
                     // construct a string from the buffer
                     String writeMessage = new String(writeBuf);
-                    mConversationArrayAdapter.add("Me:  " + writeMessage);
+                    //mConversationArrayAdapter.add("Me:  " + writeMessage);
                     break;
                 case Constants.MESSAGE_READ:
                     byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
                     String readMessage = new String(readBuf, 0, msg.arg1);
-                    mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + readMessage);
+                    //mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + readMessage);
                     break;
                 case Constants.MESSAGE_DEVICE_NAME:
                     // save the connected device's name
-                    mConnectedDeviceName = msg.getData().getString(Constants.DEVICE_NAME);
-                    if (null != UIActivity) {
-                        Toast.makeText(UIActivity, "Connected to "
+                    String mConnectedDeviceName = msg.getData().getString(Constants.DEVICE_NAME);
+                    if (null != TeachingModeMainActivity.this) {
+                        Toast.makeText(TeachingModeMainActivity.this, "Connected to "
                                 + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case Constants.MESSAGE_TOAST:
-                    if (null != UIActivity) {
-                        Toast.makeText(UIActivity, msg.getData().getString(Constants.TOAST),
+                    if (null != TeachingModeMainActivity.this) {
+                        Toast.makeText(TeachingModeMainActivity.this, msg.getData().getString(Constants.TOAST),
                                 Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
         }
-    }; */
+    }; 
 	
 	public ArrayList<Gesture> getGesturesInMobile()
 	{

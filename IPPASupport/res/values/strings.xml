@@ -4,13 +4,16 @@
 <!-- App -->
     
     <string name="app_name">IPPA</string>
+    <string name="connection_status">Unchecked</string>
+    <string name="connection_status_description">Device Connection:</string>
+    <string name="title_connecting">connecting &#8230;</string>
+    <string name="title_connected_to">connected</string>
+    <string name="title_not_connected">not connected</string>
     
 <!-- Main Activity   --> 
 
     <string name="title_activity_main">IPPA Main</string>
-    <string name="description_connection">Unchecked</string>
     <string name="description_main_activity">This is the status of the Bluetooth Connection: </string>
-
     <string name="voice_command_button">Voice Command</string>
     <string name="teaching_mode_button">Teaching Mode</string>
     
@@ -18,7 +21,6 @@
     
     <string name="title_activity_voice_command">Voice Command</string>
     <string name="description_voice_command">The text translated is: </string>
-    <string name="voice_connection_status">Not Checked</string>
     <string name="voice_speech_init">No Command</string>
    
 <!-- Teaching Mode Main Activity -->

@@ -35,7 +35,7 @@
             android:layout_gravity="start"
             android:layout_marginTop="20dp"
             android:layout_row="1"
-            android:text="@string/description_connection" />
+            android:text="@string/connection_status" />
     </GridLayout>
 
     <GridLayout

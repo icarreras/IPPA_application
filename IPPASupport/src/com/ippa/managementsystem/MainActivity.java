@@ -7,6 +7,7 @@ import com.ippa.bluetooth.BluetoothService;
 import com.ippa.bluetooth.BluetoothSetup;
 import com.ippa.bluetooth.Constants;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Application;
@@ -14,6 +15,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -28,10 +30,9 @@ public class MainActivity extends Activity {
     private BluetoothService m_bluetoothService = null;
 	private BluetoothAdapter m_bluetoothAdapter = null;
 	private BluetoothSetup m_bluetoothSetup;
-	private UUID m_foundUuid;
 	protected IppaApplication app;
 	
-	private TextView textViewConnectionStatus;
+	private TextView m_connectionStatusText;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,7 @@ public class MainActivity extends Activity {
         final Button buttonTeachingMode = (Button) findViewById(R.id.teach_mode_button);
         final Button buttonConnect = (Button) findViewById(R.id.button1);
         final Button buttonSend = (Button) findViewById(R.id.button2);
-        textViewConnectionStatus = (TextView) findViewById(R.id.connection_status);
+        m_connectionStatusText = (TextView) findViewById(R.id.connection_status);
         
         // Get reference to the global data (BT)
         app = (IppaApplication) getApplicationContext();
@@ -53,7 +54,6 @@ public class MainActivity extends Activity {
     	// Verify that the Bluetooth is enabled
 		m_bluetoothSetup.setup();
         
-        // TODO: Maybe we will need to pass some info about Bluetooth through these intents
         buttonVoiceCommand.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -70,7 +70,9 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				String test = "IvetteIvetteIvetteee";
-				m_bluetoothService.write(test.getBytes());
+				// TODO: TESTING OF SHARED BLUETOOTH SERVICE
+				app.sendViaBluetooth(test.getBytes());
+				//m_bluetoothService.write(test.getBytes());
 				
 			}
 		});
@@ -111,30 +113,13 @@ public class MainActivity extends Activity {
     
     
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (m_bluetoothService != null) {
-            m_bluetoothService.stop();
-        }
-    }
-    
-    @Override
     public void onResume() {
         super.onResume();
         
         // TODO: Determine behavior to reconnect 
+        
+        // TODO: => result: not needed since the service never dies in the application
         // this needs to be moved to the service object
-
-        // Performing this check in onResume() covers the case in which BT was
-        // not enabled during onStart(), so we were paused to enable it...
-        // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
-        if (m_bluetoothService != null) {
-            // Only if the state is STATE_NONE, do we know that we haven't started already
-            if (m_bluetoothService.getState() == Constants.STATE_NONE) {
-                // Start the Bluetooth chat services
-/*                m_bluetoothService.start();*/
-            }
-        }
     }
     
     private void startBluetooth() { 
@@ -143,17 +128,16 @@ public class MainActivity extends Activity {
         if(!m_bluetoothSetup.isDevicePresent())
         {
         	// Show dialog that the device was not found
-        	showCommNotPossibleDialog("The device is not found in the near area"); // TODO: CHANGE DIALOG
+        	showCommNotPossibleDialog("The device is not found in the near area");
         }
         else
         {
-        	m_bluetoothService = new BluetoothService(this);
-            m_bluetoothService.setHandler(m_handler);
+        	//m_bluetoothService = new BluetoothService(this);
+        	app.setBTHandler(m_handler);
+            //m_bluetoothService.setHandler(m_handler);
             
-            // get supported uuid services
-            m_foundUuid = Constants.MY_UUID_SECURE; //TODO: eliminate the need to specify uuid every where
-            
-            m_bluetoothService.connect(m_bluetoothSetup.getDevice(), m_foundUuid);
+            app.connectToDevice(m_bluetoothSetup.getDevice());
+            //m_bluetoothService.connect(m_bluetoothSetup.getDevice(), m_foundUuid);
         }
     	
     }  
@@ -199,6 +183,16 @@ public class MainActivity extends Activity {
     	}
     }
     
+    /**
+     * Updates the status on the action bar.
+     *
+     * @param subTitle status
+     */
+    private void setStatus(CharSequence status, int color) 
+    {
+    	m_connectionStatusText.setText(status);
+    	m_connectionStatusText.setTextColor(color);
+    }
     
     /**
      * The Handler that gets information back from the BluetoothService
@@ -210,14 +204,13 @@ public class MainActivity extends Activity {
                 case Constants.MESSAGE_STATE_CHANGE:
                     switch (msg.arg1) {
                         case Constants.STATE_CONNECTED:
-                        	textViewConnectionStatus.setText("Connected");
-                            break;
+                        	setStatus(getString(R.string.title_connected_to), Color.GREEN);
+                        	break;
                         case Constants.STATE_CONNECTING:
-                        	textViewConnectionStatus.setText("Connecting");
+                            setStatus(getString(R.string.title_connecting), Color.YELLOW);
                             break;
-                        case Constants.STATE_LISTEN:
                         case Constants.STATE_NONE:
-                        	textViewConnectionStatus.setText("NOT Connected");
+                            setStatus(getString(R.string.title_not_connected), Color.RED);
                             break;
                     }
                     break;
