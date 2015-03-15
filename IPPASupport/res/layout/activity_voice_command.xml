@@ -43,17 +43,16 @@
 	        android:id="@+id/speech_button"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:text="Speech" 
+	        android:text="@+string/input_audio_button" 
 	        android:layout_centerHorizontal="true"/>
 	    <Button
 	        android:id="@+id/send_command_button"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:text="Send the command" 
+	        android:text="@+string/temp_send_button" 
 	        android:layout_below="@+id/speech_button"
 	        android:layout_centerHorizontal="true"/>
     
       </RelativeLayout>
     
-
 </RelativeLayout>

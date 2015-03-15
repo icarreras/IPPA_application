@@ -124,13 +124,17 @@ public class TeachingModeMainActivity extends FragmentActivity implements Action
         getActionBar().setSelectedNavigationItem(position);	
 	}
 	
-	public void onPaused()
+	@Override
+	public void onPause()
 	{
+		super.onPause();
 		// save changes that need to be made to the gesture file in the system
 	}
 	
+	@Override
 	public void onDestroy()
 	{
+		super.onDestroy();
 		// inform system that teaching mode is over
 		// do not disconnect
 	}

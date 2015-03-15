@@ -22,6 +22,8 @@
     <string name="title_activity_voice_command">Voice Command</string>
     <string name="description_voice_command">The text translated is: </string>
     <string name="voice_speech_init">No Command</string>
+    <string name="input_audio_button">Speak</string>
+    <string name="temp_send_button">Send Command</string>
    
 <!-- Teaching Mode Main Activity -->
     
