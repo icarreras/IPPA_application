@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.ippa.R;
 
+import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -16,6 +17,13 @@ import android.widget.ListView;
 
 public class DemoGestureFragment extends Fragment{
 
+	private ArrayList<Gesture> inMobileGestures;
+	private ArrayList<Gesture> inArmGestures;
+	private final int m_optionsInMobile = R.array.dialog_demo_inmobile_options;
+	private final int m_optionsInArm = R.array.dialog_demo_inarm_options;
+	public static final int INMOBILE = 1;
+	public static final int INARM = -1;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
@@ -37,22 +45,29 @@ public class DemoGestureFragment extends Fragment{
         inArmListView.setAdapter(gestureInArmArrayAdapter);
         inArmListView.setOnItemClickListener(m_gestureInArmListener);
 		
-        ArrayList<Gesture> inMobile = ((TeachingModeMainActivity)this.getActivity()).getGesturesInMobile();
-        ArrayList<Gesture> inArm = ((TeachingModeMainActivity)this.getActivity()).getGesturesInArm();
+        inMobileGestures = ((TeachingModeMainActivity)this.getActivity()).getGesturesInMobile();
+        inArmGestures = ((TeachingModeMainActivity)this.getActivity()).getGesturesInArm();
         
         // Add Gesture names to the appropriate list
-        for(int i=0; i< inMobile.size(); i++)
+        for(int i=0; i< inMobileGestures.size(); i++)
         {
-        	gestureInMobileArrayAdapter.add(inMobile.get(i).getGestureName());
+        	gestureInMobileArrayAdapter.add(inMobileGestures.get(i).getGestureName());
         }
         
-        for(int i=0; i< inArm.size(); i++)
+        for(int i=0; i< inArmGestures.size(); i++)
         {
-        	gestureInArmArrayAdapter.add(inArm.get(i).getGestureName());
+        	gestureInArmArrayAdapter.add(inArmGestures.get(i).getGestureName());
         }
         
 		return demoGestureView;
 	}
+	
+	private void showDialog(Gesture g, int option, int dialogType) {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        DemoGestureDialogFragment dialog = DemoGestureDialogFragment.newInstance(g, option, dialogType);
+		dialog.show(fm, "DemoOptions");
+        
+    }
 	
 	private AdapterView.OnItemClickListener m_gestureInMobileListener
     	= new AdapterView.OnItemClickListener() {
@@ -62,6 +77,8 @@ public class DemoGestureFragment extends Fragment{
 				long id) {
 			// TODO Auto-generated method stub
 			// user position to determine what item was clicked on
+			Gesture gSelected = inMobileGestures.get(position);
+			showDialog(gSelected, m_optionsInMobile, INMOBILE);
 			
 		}
 	
@@ -73,7 +90,8 @@ public class DemoGestureFragment extends Fragment{
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,	long id) {
 		// TODO Auto-generated method stub
-		
+		Gesture gSelected = inArmGestures.get(position);
+		showDialog(gSelected, m_optionsInArm, INARM);
 	}
 
 };

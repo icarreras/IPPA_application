@@ -3,11 +3,14 @@ package com.ippa.managementsystem;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import com.ippa.bluetooth.IppaPackageInterface;
 
-public class Gesture implements IppaPackageInterface{
+public class Gesture implements IppaPackageInterface, Parcelable{
+	
 	
 	private final int DEFAULT = 0;
 	private final int FINGERCOUNT = 5;
@@ -53,6 +56,22 @@ public class Gesture implements IppaPackageInterface{
 		m_activeFingers = 0;
 		m_name = "Default" + m_command;
 	}
+	
+	private Gesture(Parcel in) {
+        // remake the gesture from the information in the parcel
+		
+		m_idx = in.readInt();
+		m_activeFingers = in.readInt();
+		m_name = in.readString();
+		m_command = in.readString();
+		m_storedInArm = Boolean.parseBoolean(in.readString());
+		m_pressureAllowed = Pressure.valueOf(in.readString());
+		m_startPosition = new ArrayList<Integer>();
+		m_startPosition = in.readArrayList(Integer.class.getClassLoader());
+		m_endPosition = new ArrayList<Integer>();
+		m_endPosition = in.readArrayList(Integer.class.getClassLoader());
+		
+    }
 	
 	// This constructor will be used when loading gestures from a file
 	public Gesture(String gestureInformation)
@@ -229,5 +248,39 @@ public class Gesture implements IppaPackageInterface{
 	{
 		return m_name;
 	}
+
+	@Override
+	public int describeContents() {
+		// generally not used
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		// write the state of the object in the parcel
+		dest.writeInt(m_idx);
+		dest.writeInt(m_activeFingers);
+		dest.writeString(m_name);
+		dest.writeString(m_command);
+		dest.writeString(Boolean.toString(m_storedInArm));
+		dest.writeString(m_pressureAllowed.toString());
+		dest.writeArray(m_startPosition.toArray());;
+		dest.writeArray(m_endPosition.toArray());
+		
+	}
+	
+	public static final Parcelable.Creator<Gesture> CREATOR
+    	= new Parcelable.Creator<Gesture>() 
+    	{
+			public Gesture createFromParcel(Parcel in) 
+			{
+				return new Gesture(in);
+			}
+
+			public Gesture[] newArray(int size) 
+			{
+				return new Gesture[size];
+			}
+    	};
 
 }

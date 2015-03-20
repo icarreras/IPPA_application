@@ -130,7 +130,7 @@ public class VoiceCommandActivity extends Activity{
 	}
 
 	// TODO: make handler correct
-	/*private final Handler m_handler = new Handler() {
+	/* private final Handler m_handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {

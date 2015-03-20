@@ -33,6 +33,18 @@
 	<string name="title_fragment_demo_gesture">Demo Gesture</string>
 	<string name="title_demo_inmobile">Gestures in Mobile</string>
 	<string name="title_demo_inarm">Gestures in Arm</string>
+	<string name="dialog_title_options">Options</string>
+    <string-array name="dialog_demo_inmobile_options">
+        <item >Edit </item>
+        <item >Transfer to IPPA</item>
+        <item >Delete</item>
+        <item >Play Gesture</item>
+    </string-array>
+    <string-array name="dialog_demo_inarm_options">
+        <item >Transfer to Phone </item>
+        <item >Trigger Gesture</item>
+        <item >Delete</item>
+    </string-array>
 	
 <!-- Demo Gesture Fragment-->
 	<string name="title_fragment_create_gesture">Create Gesture</string>
