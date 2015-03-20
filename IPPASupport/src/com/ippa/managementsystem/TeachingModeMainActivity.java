@@ -76,9 +76,20 @@ public class TeachingModeMainActivity extends FragmentActivity implements Action
     	Gesture g1 = new Gesture();
     	g1.setGestureName("Gesture1");
     	Gesture g2 = new Gesture();
-    	g2.setGestureName("GestureInArm2");
+    	g2.setGestureName("Grab 1");
+    	g2.setGestureIdx(0);
+    	Gesture g3 = new Gesture();
+    	g3.setGestureName("Grab 2");
+    	g3.setGestureIdx(1);
+    	Gesture g4 = new Gesture();
+    	g4.setGestureName("Grab 3");
+    	g4.setGestureIdx(2);
+    	
+    	// Add them to the list
     	m_inMobileGesture.add(g1);
     	m_inArmGesture.add(g2);
+    	m_inArmGesture.add(g3);
+    	m_inArmGesture.add(g4);
     	
     	
         

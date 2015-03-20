@@ -141,7 +141,7 @@ public class DeviceDiscoveryActivity extends Activity{
                 	Log.i("Reciever", "Device obtained: " + ((device.getName()== null)? "bad device" : "good device"));
                 	// Check that the device found is the IPPA system
                 	String name = device.getName() + "";
-                	if(device.getName().contains(Constants.DEVICE_NAME))
+                	if(name.contains(Constants.DEVICE_NAME))
                 	{
                 		FoundDevice(device);	
                 	}
