@@ -31,12 +31,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.ippa.managementsystem.VoiceCommandActivity"
-            android:label="@string/title_activity_voice_command" 
-            android:configChanges="orientation"
-    		android:screenOrientation="portrait">
-        </activity>
-        <activity
             android:name="com.ippa.managementsystem.TeachingModeMainActivity"
             android:label="@string/title_activity_teaching_mode" 
             android:configChanges="orientation"

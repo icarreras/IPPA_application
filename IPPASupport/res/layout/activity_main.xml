@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_column="0"
             android:layout_marginTop="20dp"
+            android:textSize="15sp"
             android:layout_row="0"
             android:enabled="true"
             android:text="@string/description_main_activity" />
@@ -34,8 +35,18 @@
             android:layout_column="0"
             android:layout_gravity="start"
             android:layout_marginTop="20dp"
+            android:textSize="18sp"
+            android:background="@color/Gray"
+            android:textStyle="bold"
             android:layout_row="1"
             android:text="@string/connection_status" />
+        <TextView
+	        android:id="@+id/translated_text"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/voice_speech_init"
+	        android:enabled="true"/>
     </GridLayout>
 
     <GridLayout
@@ -74,21 +85,13 @@
     </GridLayout>
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/connect_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/gridLayout2"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="31dp"
-        android:text="Button" />
+        android:text="@string/connect_button" />
 
-    <Button
-        android:id="@+id/button2"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/button1"
-        android:layout_centerVertical="true"
-        android:text="Send Chars" />
 
 </RelativeLayout>

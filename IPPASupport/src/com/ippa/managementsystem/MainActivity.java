@@ -1,6 +1,7 @@
 package com.ippa.managementsystem;
 
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.ippa.R;
 import com.ippa.bluetooth.BluetoothService;
@@ -10,26 +11,31 @@ import com.ippa.bluetooth.Constants;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.ParcelUuid;
-import android.util.Log;
+import android.speech.RecognizerIntent;
 import android.view.View;
 import android.widget.*;
 
 
 public class MainActivity extends Activity {
 
+	private final int SPEECHNUMBEROFRESULTS = 3; 
+	private final int VOICE_RECOGNITION_REQUEST_CODE = 4232;
+	private final String SPEECHHINT = "Say a command";
+	
     private BluetoothService m_bluetoothService = null;
 	private BluetoothAdapter m_bluetoothAdapter = null;
 	private BluetoothSetup m_bluetoothSetup;
+	private TextView m_textViewTranslated;
+	private Button m_buttonVoiceCommand;
 	protected IppaApplication app;
 	
 	private TextView m_connectionStatusText;
@@ -40,10 +46,14 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         // Initialize GUI objects
-        final Button buttonVoiceCommand = (Button) findViewById(R.id.voice_command_button);
+        m_buttonVoiceCommand  = (Button) findViewById(R.id.voice_command_button);
         final Button buttonTeachingMode = (Button) findViewById(R.id.teach_mode_button);
-        final Button buttonConnect = (Button) findViewById(R.id.button1);
-        final Button buttonSend = (Button) findViewById(R.id.button2);
+        final Button buttonConnect = (Button) findViewById(R.id.connect_button);
+        
+        m_textViewTranslated = (TextView)findViewById(R.id.translated_text);
+        m_textViewTranslated.setText("Nothing has been translated");
+        
+        
         m_connectionStatusText = (TextView) findViewById(R.id.connection_status);
         
         // Get reference to the global data (BT)
@@ -53,27 +63,37 @@ public class MainActivity extends Activity {
         
     	// Verify that the Bluetooth is enabled
 		m_bluetoothSetup.setup();
+		
+		checkVoiceRecognition();
         
-        buttonVoiceCommand.setOnClickListener(new View.OnClickListener() {
+		m_buttonVoiceCommand.setOnClickListener(new View.OnClickListener() {
 			
-			@Override
+        	@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(MainActivity.this, VoiceCommandActivity.class);
+				Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+				
+				// Specify the calling package to identify your application
+				intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getClass()
+				    .getPackage().getName());
 
-				startActivity(intent);
-				
-			}
-		});
-        
-        buttonSend.setOnClickListener(new View.OnClickListener() {
+				// Display an hint to the user about what he should say.
+				intent.putExtra(RecognizerIntent.EXTRA_PROMPT, SPEECHHINT);
+
+				// Given an hint to the recognizer about what the user is going to say
+				//There are two form of language model available
+			    //1.LANGUAGE_MODEL_WEB_SEARCH : For short phrases
+				//2.LANGUAGE_MODEL_FREE_FORM  : If not sure about the words or phrases and its domain.
+				intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+				    RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
 			
-			@Override
-			public void onClick(View v) {
-				String test = "IvetteIvetteIvetteee";
-				// TODO: TESTING OF SHARED BLUETOOTH SERVICE
-				app.sendViaBluetooth(test.getBytes());
-				//m_bluetoothService.write(test.getBytes());
-				
+			
+				// Specify how many results you want to receive. The results will be
+				// sorted where the first result is the one with higher confidence.
+				// TODO: go through the results in case the first is not the correct match
+				intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, SPEECHNUMBEROFRESULTS);
+				//Start the Voice recognizer activity for the result.
+				startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
+
 			}
 		});
         
@@ -108,6 +128,7 @@ public class MainActivity extends Activity {
 		        
 			}
 		});
+      
         
     }
     
@@ -142,10 +163,26 @@ public class MainActivity extends Activity {
     	
     }  
     
+    
+    
+    public void checkVoiceRecognition() 
+	{
+		// Check if voice recognition is present
+		PackageManager pm = getPackageManager();
+		List<ResolveInfo> activities = pm.queryIntentActivities(new Intent(
+				RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
+		
+		if (activities.size() == 0) {
+			m_buttonVoiceCommand.setEnabled(false);
+			m_buttonVoiceCommand.setText("Voice recognizer not present");
+			showToastMessage("Voice recognizer not present");
+		}
+	}
+    
     /*
-     * This method will receive all the Bluetooth connection request
-     * from the Bluetooth Setup class
-     * 
+     * This method will receive 
+     * - all the Bluetooth connection request from the Bluetooth Setup class
+     * - the speech translation from the Google API
      */
     
     @Override
@@ -180,6 +217,35 @@ public class MainActivity extends Activity {
 				startBluetooth();
 				break;
 			}
+			
+			
+			
+			case VOICE_RECOGNITION_REQUEST_CODE:
+			{
+		    //If Voice recognition is successful then it returns RESULT_OK
+			    if(resultCode == RESULT_OK) 
+			    {
+				    ArrayList<String> textMatchList = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+				    if (!textMatchList.isEmpty()) 
+				    {
+					    // display the match and send
+				    	for(String text: textMatchList)
+				    	{
+				    		m_textViewTranslated.setText(text + " \n");
+				    	}	
+				    }
+			    }else if(resultCode == RecognizerIntent.RESULT_AUDIO_ERROR){
+				    showToastMessage("Audio Error");
+			    }else if(resultCode == RecognizerIntent.RESULT_CLIENT_ERROR){
+			    	showToastMessage("Client Error");
+			    }else if(resultCode == RecognizerIntent.RESULT_NETWORK_ERROR){
+			    	showToastMessage("Network Error");
+			    }else if(resultCode == RecognizerIntent.RESULT_NO_MATCH){
+			    	showToastMessage("No Match");
+			    }else if(resultCode == RecognizerIntent.RESULT_SERVER_ERROR){
+			    	showToastMessage("Server Error");
+			    }
+		     }
     	}
     }
     
@@ -228,18 +294,19 @@ public class MainActivity extends Activity {
                     break;
                 case Constants.MESSAGE_DEVICE_NAME:
                     // display connected toast
-                        Toast.makeText(MainActivity.this, new String(Constants.DEVICE_NAME + " now connected"),
-                        		Toast.LENGTH_SHORT).show();
+                        showToastMessage(Constants.DEVICE_NAME + " now connected");
                     break;
                 case Constants.MESSAGE_TOAST:
-                        Toast.makeText(MainActivity.this, msg.getData().getString(Constants.TOAST),
-                                Toast.LENGTH_SHORT).show();
+                        showToastMessage(msg.getData().getString(Constants.TOAST));
                     break;
             }
         }
     };
     
-    
+    void showToastMessage(String message)
+	{
+		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+	}
 
     private void showCommNotPossibleDialog(String message)
     {

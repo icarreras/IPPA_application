@@ -16,6 +16,7 @@
     <string name="description_main_activity">This is the status of the Bluetooth Connection: </string>
     <string name="voice_command_button">Voice Command</string>
     <string name="teaching_mode_button">Teaching Mode</string>
+    <string name="connect_button">Connect</string>
     
 <!-- Voice Command Activity -->
     
