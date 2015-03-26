@@ -1,5 +1,7 @@
 package com.ippa.bluetooth;
 
+import java.util.ArrayList;
+
 public interface IppaPackageInterface {
 	/*
 	 * A - Trigger a gesture => gesture id
@@ -16,4 +18,5 @@ public interface IppaPackageInterface {
 	public String getPackageC();
 	public String getPackageD();
 	public String getPackageE();
+	public ArrayList fromPackageI();
 }

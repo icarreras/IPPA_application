@@ -4,14 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ippa.R;
-import com.ippa.bluetooth.BluetoothService;
 import com.ippa.bluetooth.BluetoothSetup;
 import com.ippa.bluetooth.Constants;
+import com.ippa.bluetooth.DeviceDiscoveryActivity;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -21,6 +19,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.speech.RecognizerIntent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 
@@ -31,12 +31,11 @@ public class MainActivity extends Activity {
 	private final int VOICE_RECOGNITION_REQUEST_CODE = 4232;
 	private final String SPEECHHINT = "Say a command";
 	
-    private BluetoothService m_bluetoothService = null;
-	private BluetoothAdapter m_bluetoothAdapter = null;
 	private BluetoothSetup m_bluetoothSetup;
 	private TextView m_textViewTranslated;
 	private Button m_buttonVoiceCommand;
-	protected IppaApplication app;
+	private Button m_buttonTeachingMode;
+	protected IppaApplication m_app;
 	
 	private TextView m_connectionStatusText;
 	
@@ -47,7 +46,7 @@ public class MainActivity extends Activity {
 
         // Initialize GUI objects
         m_buttonVoiceCommand  = (Button) findViewById(R.id.voice_command_button);
-        final Button buttonTeachingMode = (Button) findViewById(R.id.teach_mode_button);
+        final Button m_buttonTeachingMode = (Button) findViewById(R.id.teach_mode_button);
         final Button buttonConnect = (Button) findViewById(R.id.connect_button);
         
         m_textViewTranslated = (TextView)findViewById(R.id.translated_text);
@@ -57,7 +56,7 @@ public class MainActivity extends Activity {
         m_connectionStatusText = (TextView) findViewById(R.id.connection_status);
         
         // Get reference to the global data (BT)
-        app = (IppaApplication) getApplicationContext();
+        m_app = (IppaApplication) getApplicationContext();
         
 		m_bluetoothSetup = new BluetoothSetup(MainActivity.this);
         
@@ -66,6 +65,7 @@ public class MainActivity extends Activity {
 		
 		checkVoiceRecognition();
         
+		m_buttonVoiceCommand.setEnabled(false);
 		m_buttonVoiceCommand.setOnClickListener(new View.OnClickListener() {
 			
         	@Override
@@ -97,11 +97,12 @@ public class MainActivity extends Activity {
 			}
 		});
         
-        buttonTeachingMode.setOnClickListener(new View.OnClickListener() {
+		// TODO: m_buttonTeachingMode.setEnabled(false);
+        m_buttonTeachingMode.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(MainActivity.this, TeachingModeMainActivity.class);
+				Intent intent = new Intent(MainActivity.this, TeachingModeActivity.class);
 				startActivity(intent);
 				
 			}
@@ -132,6 +133,30 @@ public class MainActivity extends Activity {
         
     }
     
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.app_actions, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            // only one item to be selected
+            // call the dialog fragment
+            case R.id.action_help:
+            	// TODO: create the help activity
+            	Intent intent = new Intent(MainActivity.this, HelpActivity.class);
+				startActivity(intent);
+            	return true;
+            
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    
     
     @Override
     public void onResume() {
@@ -154,10 +179,10 @@ public class MainActivity extends Activity {
         else
         {
         	//m_bluetoothService = new BluetoothService(this);
-        	app.setBTHandler(m_handler);
+        	m_app.setBTHandler(m_handler);
             //m_bluetoothService.setHandler(m_handler);
             
-            app.connectToDevice(m_bluetoothSetup.getDevice());
+        	m_app.connectToDevice(m_bluetoothSetup.getDevice());
             //m_bluetoothService.connect(m_bluetoothSetup.getDevice(), m_foundUuid);
         }
     	
@@ -229,10 +254,12 @@ public class MainActivity extends Activity {
 				    if (!textMatchList.isEmpty()) 
 				    {
 					    // display the match and send
+				    	String allResults = "";
 				    	for(String text: textMatchList)
 				    	{
-				    		m_textViewTranslated.setText(text + " \n");
+				    		allResults = allResults + text + " \n";
 				    	}	
+				    	m_textViewTranslated.setText(allResults);
 				    }
 			    }else if(resultCode == RecognizerIntent.RESULT_AUDIO_ERROR){
 				    showToastMessage("Audio Error");
@@ -245,6 +272,7 @@ public class MainActivity extends Activity {
 			    }else if(resultCode == RecognizerIntent.RESULT_SERVER_ERROR){
 			    	showToastMessage("Server Error");
 			    }
+			    break;
 		     }
     	}
     }
@@ -276,6 +304,8 @@ public class MainActivity extends Activity {
                             setStatus(getString(R.string.title_connecting), Color.YELLOW);
                             break;
                         case Constants.STATE_NONE:
+                        	m_buttonVoiceCommand.setEnabled(true);
+                        	m_buttonTeachingMode.setEnabled(true);
                             setStatus(getString(R.string.title_not_connected), Color.RED);
                             break;
                     }

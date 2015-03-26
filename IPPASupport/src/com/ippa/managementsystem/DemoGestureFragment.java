@@ -45,8 +45,8 @@ public class DemoGestureFragment extends Fragment{
         inArmListView.setAdapter(gestureInArmArrayAdapter);
         inArmListView.setOnItemClickListener(m_gestureInArmListener);
 		
-        inMobileGestures = ((TeachingModeMainActivity)this.getActivity()).getGesturesInMobile();
-        inArmGestures = ((TeachingModeMainActivity)this.getActivity()).getGesturesInArm();
+        inMobileGestures = ((TeachingModeActivity)this.getActivity()).getGesturesInMobile();
+        inArmGestures = ((TeachingModeActivity)this.getActivity()).getGesturesInArm();
         
         // Add Gesture names to the appropriate list
         for(int i=0; i< inMobileGestures.size(); i++)

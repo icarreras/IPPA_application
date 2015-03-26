@@ -163,6 +163,15 @@ public class Gesture implements IppaPackageInterface, Parcelable{
 		
 		return null;
 	}
+	
+	@Override
+	public ArrayList<Gesture> fromPackageI()
+	{
+		ArrayList<Gesture> gestureFromArm = new ArrayList<Gesture>();
+		//TODO: finish this
+		
+		return gestureFromArm;
+	}
 
 	
 	private String fullGestureInfo()

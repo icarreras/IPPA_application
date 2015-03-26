@@ -31,14 +31,21 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.ippa.managementsystem.TeachingModeMainActivity"
+            android:name="com.ippa.managementsystem.TeachingModeActivity"
             android:label="@string/title_activity_teaching_mode" 
+            android:parentActivityName="com.ippa.managementsystem.MainActivity"
             android:configChanges="orientation"
     		android:screenOrientation="portrait">
         </activity>
         <activity 
-			android:name="com.ippa.managementsystem.DeviceDiscoveryActivity"
-            android:label="Pick device"
+			android:name="com.ippa.bluetooth.DeviceDiscoveryActivity"
+            android:label="Bluetooth Discovery"
+            android:configChanges="orientation"
+    		android:screenOrientation="portrait">
+        </activity>
+        <activity 
+			android:name="com.ippa.managementsystem.HelpActivity"
+            android:label="Help"
             android:configChanges="orientation"
     		android:screenOrientation="portrait">
         </activity>

@@ -4,11 +4,15 @@ import java.util.ArrayList;
 
 import com.ippa.R;
 import com.ippa.bluetooth.Constants;
+import com.ippa.bluetooth.IppaPackages;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,10 +23,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class TeachingModeMainActivity extends FragmentActivity implements ActionBar.TabListener, 
+public class TeachingModeActivity extends FragmentActivity implements ActionBar.TabListener, 
 																		ViewPager.OnPageChangeListener{
 
 	private final String TAG = "Teaching Mode Activity";
@@ -31,6 +37,7 @@ public class TeachingModeMainActivity extends FragmentActivity implements Action
 	private GestureOptionsCollectionPageAdapter mPageAdapter;
 	private ViewPager mViewPager;
 	private TextView m_bluetoothStatus;
+	protected IppaApplication m_app;
 	
 	// List of loaded/modified gestures
 	protected ArrayList<Gesture> m_inMobileGesture;
@@ -41,8 +48,10 @@ public class TeachingModeMainActivity extends FragmentActivity implements Action
     	setContentView(R.layout.activity_teaching_mode);
     	
     	final ActionBar actionBar = getActionBar();	
+    	actionBar.setDisplayHomeAsUpEnabled(true);
     	m_bluetoothStatus = (TextView)findViewById(R.id.bt_connection_status_view);
 
+    	m_app = (IppaApplication) getApplicationContext();
     	
     	// ViewPager and its adapters use support library
         // fragments, so use getSupportFragmentManager.
@@ -94,7 +103,63 @@ public class TeachingModeMainActivity extends FragmentActivity implements Action
     	
         
 	}
+	
+	 @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.app_actions, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            // only one item to be selected
+            // call the dialog fragment
+            case R.id.action_help:
+            	// TODO: create the help activity
+            	Intent intent = new Intent(TeachingModeActivity.this, HelpActivity.class);
+				startActivity(intent);
+            	return true;
+            	
+            case android.R.id.home:
+            	onBackPressed();
+            	return true;
+            
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    
+    public void confirmModeSwitch(){
+        AlertDialog.Builder confirmationDialog = new AlertDialog.Builder(TeachingModeActivity.this);
+        confirmationDialog.setMessage(R.string.switch_to_auto_mode);
+        confirmationDialog.setTitle(R.string.confirm_mode_switch);
+        confirmationDialog.setCancelable(false);
 
+        confirmationDialog.setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // Do nothing
+            }
+        });
+
+
+        confirmationDialog.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            	sendPackageToBluetooth(IppaPackages.getPackageF());
+            }
+        });
+
+        confirmationDialog.create();
+        confirmationDialog.show();
+    }
+
+    private void sendPackageToBluetooth(String message)
+    {
+    	m_app.sendViaBluetooth(message.getBytes());
+    }
+    
 	@Override
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {
 		// TODO Nothing for now, possible refresh (recreation of the fragment)
@@ -194,14 +259,14 @@ public class TeachingModeMainActivity extends FragmentActivity implements Action
                 case Constants.MESSAGE_DEVICE_NAME:
                     // save the connected device's name
                     String mConnectedDeviceName = msg.getData().getString(Constants.DEVICE_NAME);
-                    if (null != TeachingModeMainActivity.this) {
-                        Toast.makeText(TeachingModeMainActivity.this, "Connected to "
+                    if (null != TeachingModeActivity.this) {
+                        Toast.makeText(TeachingModeActivity.this, "Connected to "
                                 + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case Constants.MESSAGE_TOAST:
-                    if (null != TeachingModeMainActivity.this) {
-                        Toast.makeText(TeachingModeMainActivity.this, msg.getData().getString(Constants.TOAST),
+                    if (null != TeachingModeActivity.this) {
+                        Toast.makeText(TeachingModeActivity.this, msg.getData().getString(Constants.TOAST),
                                 Toast.LENGTH_SHORT).show();
                     }
                     break;

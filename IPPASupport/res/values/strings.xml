@@ -17,20 +17,16 @@
     <string name="voice_command_button">Voice Command</string>
     <string name="teaching_mode_button">Teaching Mode</string>
     <string name="connect_button">Connect</string>
-    
-<!-- Voice Command Activity -->
-    
-    <string name="title_activity_voice_command">Voice Command</string>
-    <string name="description_voice_command">The text translated is: </string>
     <string name="voice_speech_init">No Command</string>
-    <string name="input_audio_button">Speak</string>
-    <string name="temp_send_button">Send Command</string>
+    
    
 <!-- Teaching Mode Main Activity -->
     
     <string name="title_activity_teaching_mode">Teaching Mode</string>
+    <string name="switch_to_auto_mode">If you continue you will leave the Teaching Mode, your IPPA system will
+        switch to Autonomous Mode</string>
    
-<!-- Demo Gesture Fragment-->
+<!-- Demo Gesture Fragment Demo-->
 	<string name="title_fragment_demo_gesture">Demo Gesture</string>
 	<string name="title_demo_inmobile">Gestures in Mobile</string>
 	<string name="title_demo_inarm">Gestures in Arm</string>
@@ -47,14 +43,37 @@
         <item >Delete</item>
     </string-array>
 	
-<!-- Demo Gesture Fragment-->
+<!-- Demo Gesture Fragment Create-->
 	<string name="title_fragment_create_gesture">Create Gesture</string>
-		
+	<string name="title_gesture_name">Gesture Name</string>
+	<string name="tittle_start_position">Fingers Start Position</string>
+	<string name="start_position_option">Change default start position</string>
+	<string name="tittle_end_position">Fingers End Position</string>
+	<string name="tittle_gesture_settings">Gesture Settings</string>
+	<string name="pressure_medium">Medium</string>
+	<string name="pressure_high">High</string>
+	<string name="tittle_gesture_command">Voice Command</string>
+	<string name="bt_save_gesture">Save</string>
+	
 
 <!-- Bluetooth Connection Setup -->
 	<string name="bt_setup_quit">Quit</string>
 	<string name="bt_setup_enable_failed_message">The application failed to enable the device\'s bluetooth. 
 	    IPPA will not be able to continue executing</string>
 	<string name="bt_setup_failed_title">Bluetooth Connection Failed</string>
+	
+<!-- Help Activity -->
+	<string name="title_activity_help">Help</string>
+	
+<!-- Image Descriptions -->
+	<string name="description_line">Line</string>
+	
+<!-- Top Bar -->
+	<string name="help_menu">Help</string>
+	
+<!-- Dialogs -->
+	<string name="confirm_mode_switch">Confirm Mode Switch</string>
+	<string name="button_cancel">Cancel</string>
+	<string name="button_ok">OK</string>
 
 </resources>

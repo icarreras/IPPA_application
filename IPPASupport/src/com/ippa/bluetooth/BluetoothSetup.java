@@ -6,7 +6,6 @@ import java.util.Set;
 
 
 
-import com.ippa.managementsystem.DeviceDiscoveryActivity;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -102,11 +101,6 @@ public class BluetoothSetup {
 		m_address = a; 
         // Get the BluetoothDevice object
 		m_btDevice = m_bluetoothAdapter.getRemoteDevice(m_address);
-				
-		//String address = new String("C4:43:8F:01:EF:F5"); // nexus
-        //address = new String("30:75:12:D5:AE:9C"); // xperia
-        //String address = new String("46:73:6E:32:18:21"); // laptop
-
 	}
 	
 	
