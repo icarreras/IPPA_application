@@ -1,4 +1,4 @@
-package com.ippa.ippasupport;
+package com.ippa.managementsystem;
 
 import com.ippa.R;
 
@@ -8,19 +8,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
-public class DemoGestureFragment extends Fragment{
-
+public class CreateGestureFragment extends Fragment{
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
 		
-		View demoGestureView = inflater.inflate(
-				R.layout.fragment_demo_gesture, container, false);
+		View createGestureView = inflater.inflate(
+				R.layout.fragment_create_gesture, container, false);
 		
 		// set the rest of the UI components
 		
-		return demoGestureView;
+		return createGestureView;
 	}
+	
+	
 
 }

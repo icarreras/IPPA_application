@@ -5,7 +5,7 @@ import java.util.Set;
 
 
 
-import com.ippa.ippasupport.DeviceDiscoveryActivity;
+
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -17,6 +17,8 @@ public class BluetoothSetup {
     //private BluetoothService mChatService = null;
 	private BluetoothAdapter m_bluetoothAdapter = null;
 	private String m_address;
+	private int m_state;
+	private BluetoothDevice m_btDevice;
 	private Activity UIActivity; // used for the status updates
 	
 	public BluetoothSetup(Activity parentActivity)
@@ -32,12 +34,14 @@ public class BluetoothSetup {
 	 */
 	public int setup()
 	{
+		m_state = Constants.STATE_CONNECTING;
 		if(m_bluetoothAdapter == null)
         {
         	// This device does not support bluetooth communication
         	// Can't use our application
         	// Pop up a message and the only button should say "quit"
-        	return Constants.STATE_NONE;
+			m_state = Constants.STATE_NONE;
+			return m_state;
         }
 		
 		if(!m_bluetoothAdapter.isEnabled())
@@ -49,7 +53,7 @@ public class BluetoothSetup {
 		
 		// call find device
 		
-		return Constants.STATE_CONNECTING;
+		return m_state;
 	}
 	
 	public boolean findIppaDevice()
@@ -69,6 +73,7 @@ public class BluetoothSetup {
     			if(bDevice.getName().contains(Constants.DEVICE_NAME))
     			{
     				m_address = bDevice.getAddress();
+    				setDevice(m_address);
     				return true;
     			}
     		}
@@ -81,14 +86,21 @@ public class BluetoothSetup {
     	return false;
     }
 	
-	public String getAddress()
+	public BluetoothDevice getDevice()
 	{
-		return m_address;
+		return m_btDevice;
 	}
 	
-	public void setAddress(String a)
+	public int getState()
+	{
+		return m_state;
+	}
+	
+	public void setDevice(String a)
 	{
 		m_address = a; 
+        // Get the BluetoothDevice object
+		m_btDevice = m_bluetoothAdapter.getRemoteDevice(m_address);
 	}
 	
 	

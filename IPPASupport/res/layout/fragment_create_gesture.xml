@@ -7,7 +7,209 @@
      android:orientation="vertical" 
      android:keepScreenOn="true"
      android:background="@color/LightBlue">
-     
-    
-    
+
+    <LinearLayout
+        android:id="@+id/layout_start_positions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/layout_gesture_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <EditText
+                android:id="@+id/text_gesture_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName" >
+            </EditText>
+
+            <TextView
+                android:id="@+id/text_gesture_name_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_gesture_name"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
+
+        <!-- Start position -->
+
+        <TextView
+            android:id="@+id/text_start_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/tittle_start_position" />
+
+        <ImageView
+            android:id="@+id/image_line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/description_line"
+            android:src="@drawable/black_line" />
+
+        <CheckBox
+            android:id="@+id/checkbox_start_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/start_position_option"/>
+
+        <SeekBar
+            android:id="@+id/seekbar_start_finger1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" 
+            android:visibility="gone"
+            android:max="180"/>
+
+        <SeekBar
+            android:id="@+id/seekbar_start_finger2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" 
+            android:visibility="gone"
+            android:max="180"/>
+
+        <SeekBar
+            android:id="@+id/seekbar_start_finger3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" 
+            android:visibility="gone"
+            android:max="180"/>
+
+        <SeekBar
+            android:id="@+id/seekbar_start_finger4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" 
+            android:visibility="gone"
+            android:max="180"/>
+
+        <SeekBar
+            android:id="@+id/seekbar_start_finger5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" 
+            android:visibility="gone"
+            android:max="180"/>
+
+        <!-- End position -->
+
+        <TextView
+            android:id="@+id/text_end_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/tittle_end_position" />
+
+        <ImageView
+            android:id="@+id/image_line2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/description_line"
+            android:src="@drawable/black_line" />
+
+        <SeekBar
+            android:id="@+id/seekbar_end_finger1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" 
+            android:max="180"/>
+
+        <SeekBar
+            android:id="@+id/seekbar_end_finger2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" 
+            android:max="180"/>
+
+        <SeekBar
+            android:id="@+id/seekbar_end_finger3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" 
+            android:max="180"/>
+
+        <SeekBar
+            android:id="@+id/seekbar_end_finger4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" 
+            android:max="180"/>
+
+        <SeekBar
+            android:id="@+id/seekbar_end_finger5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" 
+            android:max="180"/>
+
+        <!-- Pressure -->
+
+        <TextView
+            android:id="@+id/text_gesture_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/tittle_gesture_settings" />
+
+        <ImageView
+            android:id="@+id/image_line3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/description_line"
+            android:src="@drawable/black_line" />
+
+        <RadioGroup
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="horizontal">
+            <RadioButton
+                android:id="@+id/radio_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pressure_medium" />
+
+            <RadioButton
+                android:id="@+id/radio_high"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pressure_high" />
+        </RadioGroup>
+
+        <LinearLayout
+            android:id="@+id/layout_gesture_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:orientation="horizontal" >
+
+            <EditText
+                android:id="@+id/text_gesture_voice_command"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="textCapCharacters|textShortMessage" >
+            </EditText>
+
+            <TextView
+                android:id="@+id/text_gesture_command_title"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/tittle_gesture_command"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:text="@string/bt_save_gesture" />
+    </LinearLayout>
+   
 </ScrollView>

@@ -1,7 +1,5 @@
-package com.ippa.ippasupport;
+package com.ippa.bluetooth;
 
-
-import com.ippa.bluetooth.Constants;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -95,7 +93,7 @@ public class DeviceDiscoveryActivity extends Activity{
         m_btAdapter.startDiscovery();
     }
     
-    private void FoundDevice(BluetoothDevice btDevice)
+    private void foundDevice(BluetoothDevice btDevice)
     {
     	// Cancel discovery because it's costly and we're about to connect
         m_btAdapter.cancelDiscovery();
@@ -141,16 +139,16 @@ public class DeviceDiscoveryActivity extends Activity{
                 	Log.i("Reciever", "Device obtained: " + ((device.getName()== null)? "bad device" : "good device"));
                 	// Check that the device found is the IPPA system
                 	String name = device.getName() + "";
-                	if(device.getName().contains(Constants.DEVICE_NAME))
+                	if(name.contains(Constants.DEVICE_NAME))
                 	{
-                		FoundDevice(device);	
+                		foundDevice(device);	
                 	}
                 }
                 // When discovery is finished, change the Activity title
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) 
             {
                 // TODO: pass the result as no devices found
-            	FoundDevice(null);
+            	foundDevice(null);
             }
         }
     };

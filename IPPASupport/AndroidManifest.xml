@@ -10,16 +10,20 @@
 
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
     
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
-        
+        android:theme="@style/AppTheme" 
+  		android:name="com.ippa.managementsystem.IppaApplication">
+  		
         <activity
-            android:name=".ippasupport.MainActivity"
-            android:label="@string/title_activity_main" >
+            android:name="com.ippa.managementsystem.MainActivity"
+            android:label="@string/title_activity_main" 
+            android:configChanges="orientation"
+    		android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,20 +31,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ippasupport.ConnectionInstructionsActivity"
-            android:label="@string/title_activity_connection_instructions" >
-        </activity>
-        <activity
-            android:name=".ippasupport.VoiceCommandActivity"
-            android:label="@string/title_activity_voice_command" >
-        </activity>
-        <activity
-            android:name=".ippasupport.TeachingModeMainActivity"
-            android:label="@string/title_activity_teaching_mode" >
+            android:name="com.ippa.managementsystem.TeachingModeActivity"
+            android:label="@string/title_activity_teaching_mode" 
+            android:parentActivityName="com.ippa.managementsystem.MainActivity"
+            android:configChanges="orientation"
+    		android:screenOrientation="portrait">
         </activity>
         <activity 
-            android:name=".ippasupport.DeviceDiscoveryActivity"
-            android:label="Pick device">
+			android:name="com.ippa.bluetooth.DeviceDiscoveryActivity"
+            android:label="Bluetooth Discovery"
+            android:configChanges="orientation"
+    		android:screenOrientation="portrait">
+        </activity>
+        <activity 
+			android:name="com.ippa.managementsystem.HelpActivity"
+            android:label="Help"
+            android:configChanges="orientation"
+    		android:screenOrientation="portrait">
         </activity>
         
     </application>
