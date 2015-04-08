@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- the theme applied to the application or activity -->
+    <style name="IppaActionBarTheme"
+           parent="@android:style/Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/IppaActionBar</item>
+        <item name="android:actionBarTabTextStyle">@style/IppaActionBarTabText</item>
+        <item name="android:actionMenuTextColor">@color/IppaPink</item>
+        <item name="android:listChoiceIndicatorMultiple">@drawable/apptheme_green_btn_check_holo_light</item>
+        <item name="android:listChoiceIndicatorSingle">@drawable/apptheme_green_btn_radio_holo_light</item>
+	    <item name="android:buttonStyle">@style/ButtonAppTheme_Green</item>
+	    <item name="android:imageButtonStyle">@style/ImageButtonAppTheme_Green</item>
+	    <item name="android:windowBackground">@color/IppaBackgroud</item>
+	    <item name="android:colorBackground">@color/IppaBackgroud</item>
+    </style>
+ 
+    
+    <!-- ActionBar styles -->
+    <style name="IppaActionBar"
+           parent="@android:style/Widget.Holo.ActionBar">
+        <item name="android:titleTextStyle">@style/IppaActionBarTitleText</item>
+        <item name="android:background">@color/IppaGreen</item>
+    </style>
+
+    <!-- ActionBar title text -->
+    <style name="IppaActionBarTitleText"
+           parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/IppaPink</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <!-- ActionBar tabs text styles -->
+    <style name="IppaActionBarTabText"
+           parent="@android:style/Widget.Holo.ActionBar.TabText">
+        <item name="android:textColor">@color/White</item>
+    </style>
+    
+	<style name="ButtonAppTheme_Green" parent="android:Widget.Holo.Light.Button">
+	  	<item name="android:background">@drawable/apptheme_green_btn_default_holo_light</item>
+	</style>
+	
+	<style name="ImageButtonAppTheme_Green" parent="android:Widget.Holo.Light.ImageButton">
+	 	<item name="android:background">@drawable/apptheme_green_btn_default_holo_light</item>
+	</style>
+	
+	<style name="ButtonAppTheme_Pink" parent="android:Widget.Holo.Light.Button">
+	  <item name="android:background">@drawable/apptheme_pink_btn_default_holo_light</item>
+  	</style>
+ 
+  	<style name="ProgressBarAppTheme_Pink" parent="android:Widget.Holo.Light.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/apptheme_pink_progress_horizontal_holo_light</item>
+        <item name="android:indeterminateDrawable">@drawable/apptheme_pink_progress_indeterminate_horizontal_holo_light</item>
+  	</style>
+  	
+  	<style name="ButtonAppTheme_Yellow" parent="android:Widget.Holo.Light.Button">
+	    <item name="android:background">@drawable/apptheme_yellow_btn_default_holo_light</item>
+    </style>
+
+    <style name="ImageButtonAppTheme_Yellow" parent="android:Widget.Holo.Light.ImageButton">
+	    <item name="android:background">@drawable/apptheme_yellow_btn_default_holo_light</item>
+    </style>
+	
+    
+</resources>

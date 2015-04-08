@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+ <color name="IppaPink">#F1A8C3</color>
+ <color name="IppaDarkPink">#480C22</color>
+ <color name="IppaBackgroud">#99DBC2</color>
+ <color name="IppaBrightYellow">#FFB53B</color>
+ <color name="IppaMediumPink">#AE0040</color>
+ <color name="IppaDarkGreen">#004028</color>
+ <color name="IppaGreen">#1F9F6F</color>
+ <color name="IppaYellow">#FFE2B2</color>
  <color name="White">#FFFFFF</color>
  <color name="Ivory">#FFFFF0</color>
  <color name="LightYellow">#FFFFE0</color>

@@ -65,7 +65,7 @@ public class MainActivity extends Activity {
 		
 		checkVoiceRecognition();
         
-		m_buttonVoiceCommand.setEnabled(false);
+		//m_buttonVoiceCommand.setEnabled(false);
 		m_buttonVoiceCommand.setOnClickListener(new View.OnClickListener() {
 			
         	@Override

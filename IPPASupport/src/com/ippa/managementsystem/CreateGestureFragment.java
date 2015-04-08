@@ -7,8 +7,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 public class CreateGestureFragment extends Fragment{
+	
+	private EditText m_text_gesture_name;
+	
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater,
@@ -18,6 +22,8 @@ public class CreateGestureFragment extends Fragment{
 				R.layout.fragment_create_gesture, container, false);
 		
 		// set the rest of the UI components
+		
+		m_text_gesture_name = (EditText)createGestureView.findViewById(R.id.voice_command_button);
 		
 		return createGestureView;
 	}
