@@ -2,7 +2,8 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
   	android:layout_width="fill_parent"
-	android:layout_height="fill_parent">
+	android:layout_height="fill_parent"
+	android:background="@color/IppaLightYellow">
     <RelativeLayout
         android:id="@+id/layout_buttons"
         android:layout_width="match_parent"
@@ -10,19 +11,19 @@
 		android:layout_alignParentBottom="true">
 	    <View
 	       android:layout_width="match_parent"
-	       android:layout_height="1dip"
+	       android:layout_height="2dip"
 	       android:layout_marginLeft="4dip"
 	       android:layout_marginRight="4dip"
-	       android:background="?android:attr/dividerVertical"
+	       android:background="@color/IppaDarkGreen"
 	       android:layout_alignParentTop="true"/> 
 	   <View
 	       android:id="@+id/view_action_btns"
-	       android:layout_width="1dip"
+	       android:layout_width="2dip"
 	       android:layout_height="wrap_content"
 	       android:layout_alignParentBottom="true"
 	       android:layout_marginBottom="4dip"
 	       android:layout_marginTop="4dip"
-	       android:background="?android:attr/dividerVertical" 
+	       android:background="@color/IppaDarkGreen"
 	       android:layout_centerHorizontal="true"/> 
 	   <Button
 	       android:id="@+id/btn_save"
@@ -102,15 +103,15 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_marginTop="10dp"
-	            android:textSize="14sp"
+	            android:textSize="18sp"
 	            android:text="@string/tittle_start_position" />
 	
-	        <ImageView
-	            android:id="@+id/image_line"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:contentDescription="@string/description_line"
-	            android:src="@drawable/black_line" />
+	        <View
+		        android:layout_width="match_parent"
+		        android:layout_height="2dip"
+		        android:layout_marginBottom="10dp"
+		        android:layout_marginTop="5dp"
+		        android:background="@color/IppaDarkGreen"/> 
 	
 	        <CheckBox
 	            android:id="@+id/checkbox_start_position"
@@ -124,7 +125,7 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_marginTop="1dp"
-	            android:textSize="12sp"
+	            android:textSize="13sp"
 	            android:layout_marginLeft="10dp"
 	            android:layout_marginStart="10dp"
 	            android:visibility="gone"
@@ -143,7 +144,7 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_marginTop="1dp"
-	            android:textSize="12sp"
+	            android:textSize="13sp"
 	            android:layout_marginLeft="10dp"
 	            android:layout_marginStart="10dp"
 	            android:visibility="gone"
@@ -163,7 +164,7 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_marginTop="1dp"
-	            android:textSize="12sp"
+	            android:textSize="13sp"
 	            android:layout_marginLeft="10dp"
 	            android:layout_marginStart="10dp"
 	            android:visibility="gone"
@@ -183,7 +184,7 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_marginTop="1dp"
-	            android:textSize="12sp"
+	            android:textSize="13sp"
 	            android:layout_marginLeft="10dp"
 	            android:layout_marginStart="10dp"
 	            android:visibility="gone"
@@ -203,7 +204,7 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_marginTop="1dp"
-	            android:textSize="12sp"
+	            android:textSize="13sp"
 	            android:layout_marginLeft="10dp"
 	            android:layout_marginStart="10dp"
 	            android:visibility="gone"
@@ -225,22 +226,22 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_marginTop="10dp"
-	            android:textSize="14sp"
+	            android:textSize="18sp"
 	            android:text="@string/tittle_end_position" />
 	
-	        <ImageView
-	            android:id="@+id/image_line2"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:contentDescription="@string/description_line"
-	            android:src="@drawable/black_line" />
+	        <View
+		        android:layout_width="match_parent"
+		        android:layout_height="2dip"
+		        android:layout_marginBottom="10dp"
+		        android:layout_marginTop="5dp"
+		        android:background="@color/IppaDarkGreen"/> 
 	        
 	        <TextView
 	            android:id="@+id/text_end_position_1"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_marginTop="1dp"
-	            android:textSize="12sp"
+	            android:textSize="13sp"
 	            android:layout_marginLeft="10dp"
 	            android:layout_marginStart="10dp"
 	            android:text="@string/position_finger1" />
@@ -258,7 +259,7 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_marginTop="1dp"
-	            android:textSize="12sp"
+	            android:textSize="13sp"
 	            android:layout_marginLeft="10dp"
 	            android:layout_marginStart="10dp"
 	            android:text="@string/position_finger2" />
@@ -276,7 +277,7 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_marginTop="1dp"
-	            android:textSize="12sp"
+	            android:textSize="13sp"
 	            android:layout_marginLeft="10dp"
 	            android:layout_marginStart="10dp"
 	            android:text="@string/position_finger3" />
@@ -294,7 +295,7 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_marginTop="1dp"
-	            android:textSize="12sp"
+	            android:textSize="13sp"
 	            android:layout_marginLeft="10dp"
 	            android:layout_marginStart="10dp"
 	            android:text="@string/position_finger4" />
@@ -312,7 +313,7 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_marginTop="1dp"
-	            android:textSize="12sp"
+	            android:textSize="13sp"
 	            android:layout_marginLeft="10dp"
 	            android:layout_marginStart="10dp"
 	            android:text="@string/position_finger5" />
@@ -332,15 +333,15 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_marginTop="10dp"
-	            android:textSize="14sp"
+	            android:textSize="18sp"
 	            android:text="@string/tittle_gesture_settings" />
-	
-	        <ImageView
-	            android:id="@+id/image_line3"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:contentDescription="@string/description_line"
-	            android:src="@drawable/black_line" />
+	        
+	        <View
+		        android:layout_width="match_parent"
+		        android:layout_height="2dip"
+		        android:layout_marginBottom="10dp"
+		        android:layout_marginTop="5dp"
+		        android:background="@color/IppaDarkGreen"/> 
 	
 	        <RadioGroup
 			    android:layout_width="fill_parent"
@@ -350,21 +351,21 @@
 	                android:id="@+id/pressure_radio_tittle"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
-	                android:textSize="14sp"
+	                android:textSize="16sp"
 	                android:text="@string/pressure_setting_tittle"/>
 	            
 	            <RadioButton
 	                android:id="@+id/radio_medium"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
-	                android:textSize="13sp"
+	                android:textSize="15sp"
 	                android:text="@string/pressure_medium" />
 	
 	            <RadioButton
 	                android:id="@+id/radio_high"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
-	                android:textSize="13sp"
+	                android:textSize="15sp"
 	                android:text="@string/pressure_high" />
 	        </RadioGroup>
 	
@@ -380,7 +381,7 @@
 	                android:id="@+id/text_gesture_command_title"
 	                android:layout_width="0dp"
 	                android:layout_height="match_parent"
-	                android:textSize="14sp"
+	                android:textSize="15sp"
 	                android:layout_weight="1"
 	                android:text="@string/tittle_gesture_command" />
 	            
