@@ -12,12 +12,14 @@
     
 <!-- Main Activity   --> 
 
-    <string name="title_activity_main">IPPA Main</string>
-    <string name="description_main_activity">This is the status of the Bluetooth Connection: </string>
+    <string name="title_activity_main">IPPA</string>
+    <string name="main_connection_status">Connection status: </string>
+    <string name="main_welcome">Welcome to IPPA Mobile</string>
     <string name="voice_command_button">Voice Command</string>
     <string name="teaching_mode_button">Teaching Mode</string>
     <string name="connect_button">Connect</string>
-    <string name="voice_speech_init">No Command</string>
+    <string name="voice_speech_init"></string>
+    <string name="voice_speech_tittle">Command:    </string>
     
    
 <!-- Teaching Mode Main Activity -->
@@ -45,16 +47,24 @@
 	
 <!-- Demo Gesture Fragment Create-->
 	<string name="title_fragment_create_gesture">Create Gesture</string>
-	<string name="title_gesture_name">Gesture Name</string>
+	<string name="title_gesture_name">Gesture Name:</string>
 	<string name="tittle_start_position">Fingers Start Position</string>
 	<string name="start_position_option">Change default start position</string>
 	<string name="tittle_end_position">Fingers End Position</string>
 	<string name="tittle_gesture_settings">Gesture Settings</string>
 	<string name="pressure_medium">Medium</string>
 	<string name="pressure_high">High</string>
-	<string name="tittle_gesture_command">Voice Command</string>
+	<string name="tittle_gesture_command">Voice Command:</string>
 	<string name="bt_save_gesture">Save</string>
+	<string name="bt_reset_gesture">Reset</string>
+	<string name="pressure_setting_tittle">Pressure Allowed:</string>
 	
+	<!-- Position of fingers text -->
+	<string name="position_finger1">Thumb</string>
+	<string name="position_finger2">Index</string>
+	<string name="position_finger3">Middle</string>
+	<string name="position_finger4">Ring</string>
+	<string name="position_finger5">Pinky</string>
 
 <!-- Bluetooth Connection Setup -->
 	<string name="bt_setup_quit">Quit</string>

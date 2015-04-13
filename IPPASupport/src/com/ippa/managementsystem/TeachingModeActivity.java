@@ -36,7 +36,6 @@ public class TeachingModeActivity extends FragmentActivity implements ActionBar.
 	// Use custom PageAdapter to get correct Fragment based on position 
 	private GestureOptionsCollectionPageAdapter mPageAdapter;
 	private ViewPager mViewPager;
-	private TextView m_bluetoothStatus;
 	protected IppaApplication m_app;
 	
 	// List of loaded/modified gestures
@@ -49,7 +48,6 @@ public class TeachingModeActivity extends FragmentActivity implements ActionBar.
     	
     	final ActionBar actionBar = getActionBar();	
     	actionBar.setDisplayHomeAsUpEnabled(true);
-    	m_bluetoothStatus = (TextView)findViewById(R.id.bt_connection_status_view);
 
     	m_app = (IppaApplication) getApplicationContext();
     	
@@ -215,16 +213,6 @@ public class TeachingModeActivity extends FragmentActivity implements ActionBar.
 		// do not disconnect
 	}
 	
-    /**
-     * Updates the status on the action bar.
-     *
-     * @param subTitle status
-     */
-    private void setStatus(CharSequence status, int color) 
-    {
-    	m_bluetoothStatus.setText(status);
-    	m_bluetoothStatus.setTextColor(color);
-    }
      
     private final Handler m_Handler = new Handler() 
     {
@@ -234,13 +222,13 @@ public class TeachingModeActivity extends FragmentActivity implements ActionBar.
                 case Constants.MESSAGE_STATE_CHANGE:
                     switch (msg.arg1) {
                         case Constants.STATE_CONNECTED:
-                            setStatus(getString(R.string.title_connected_to), Color.GREEN);
+                            //setStatus(getString(R.string.title_connected_to), Color.GREEN);
                             break;
                         case Constants.STATE_CONNECTING:
-                            setStatus(getString(R.string.title_connecting), Color.YELLOW);
+                            //setStatus(getString(R.string.title_connecting), Color.YELLOW);
                             break;
                         case Constants.STATE_NONE:
-                            setStatus(getString(R.string.title_not_connected), Color.RED);
+                            //setStatus(getString(R.string.title_not_connected), Color.RED);
                             break;
                     }
                     break;

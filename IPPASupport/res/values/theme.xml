@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- the theme applied to the application or activity -->
+    <style name="IppaActionBarTheme"
+           parent="@android:style/Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/IppaActionBar</item>
+        <item name="android:actionBarTabTextStyle">@style/IppaActionBarTabText</item>
+        <item name="android:actionMenuTextColor">@color/IppaPink</item>
+        <item name="android:listChoiceIndicatorMultiple">@drawable/apptheme_green_btn_check_holo_light</item>
+        <item name="android:listChoiceIndicatorSingle">@drawable/apptheme_green_btn_radio_holo_light</item>
+	    <item name="android:buttonStyle">@style/ButtonAppTheme_Green</item>
+	    <item name="android:imageButtonStyle">@style/ImageButtonAppTheme_Green</item>
+	    <item name="android:windowBackground">@color/IppaBackgroud</item>
+	    <item name="android:colorBackground">@color/IppaBackgroud</item>
+	    <item name="android:seekBarStyle">@style/IppaSeekBarAppTheme</item>
+	    <item name="android:editTextBackground">@drawable/apptheme_edit_text_holo_light</item>
+	    <item name="android:actionBarTabStyle">@style/TabAppTheme</item>
+	    
+    </style>
+ 
+    
+    
+</resources>

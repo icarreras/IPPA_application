@@ -1,97 +1,129 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.ippa.managementsystem.MainActivity" >
 
-    <GridLayout
-        android:id="@+id/gridLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:columnCount="1"
-        android:rowCount="2" >
-
-        <TextView
-            android:id="@+id/connection_status_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_marginTop="20dp"
-            android:textSize="15sp"
-            android:layout_row="0"
-            android:enabled="true"
-            android:text="@string/description_main_activity" />
-
-        <TextView
-            android:id="@+id/connection_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_gravity="start"
-            android:layout_marginTop="20dp"
-            android:textSize="18sp"
-            android:background="@color/Gray"
-            android:textStyle="bold"
-            android:layout_row="1"
-            android:text="@string/connection_status" />
-        <TextView
-	        android:id="@+id/translated_text"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/voice_speech_init"
-	        android:enabled="true"/>
-    </GridLayout>
-
-    <GridLayout
-        android:id="@+id/gridLayout1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:columnCount="1"
-        android:rowCount="2" >
-
-        <Button
-            android:id="@+id/voice_command_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="20dp"
-            android:layout_row="0"
-            android:clickable="true"
-            android:enabled="true"
-            android:text="@string/voice_command_button" />
-
-        <Button
-            android:id="@+id/teach_mode_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="20dp"
-            android:layout_row="1"
-            android:clickable="true"
-            android:enabled="true"
-            android:text="@string/teaching_mode_button" />
-    </GridLayout>
-
-    <Button
-        android:id="@+id/connect_button"
+    
+    <LinearLayout 
+        android:id="@+id/layout_bluetooth_connection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/gridLayout2"
+        android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="31dp"
-        android:text="@string/connect_button" />
+        android:orientation="horizontal" 
+        android:layout_alignParentBottom="true">
+        
+	    <TextView
+	        android:id="@+id/connection_status_text"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textSize="15sp"
+	        android:enabled="true"
+	        android:text="@string/main_connection_status" />
+	    <TextView
+	        android:id="@+id/connection_status"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_marginLeft="10dp"
+	        android:layout_marginStart="10dp"
+	        android:layout_gravity="start"
+	        android:textSize="15sp"
+	        android:textStyle="bold"
+	        android:text="@string/connection_status" />
+    </LinearLayout>   
+    
+    <TextView 
+        android:id="@+id/welcome_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:enabled="true"
+        android:text="@string/main_welcome" 
+        android:textAppearance="?android:attr/textAppearanceLarge" 
+        android:layout_alignParentTop="true"/>
+    
+    <LinearLayout
+        android:id="@+id/layout_connect_button"
+        android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:gravity = "center_horizontal"
+		android:orientation="horizontal"
+		android:layout_marginTop="80dp"
+		android:layout_below="@id/welcome_text"
+		android:weightSum="1.0" >
+	    
+	    <Button
+	        android:id="@+id/connect_button"
+	        android:layout_width="0dp"
+	        android:layout_weight=".7"
+	        android:layout_height="wrap_content"
+	        style="@style/ButtonAppTheme_Green"
+	        android:text="@string/connect_button" />
+	</LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/layout_voice_command_button"
+        android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:gravity = "center_horizontal"
+		android:orientation="horizontal"
+		android:layout_marginTop="65dp"
+		android:layout_below="@id/layout_connect_button"
+		android:weightSum="1.0" >
+	    
+	    <Button
+	        android:id="@+id/voice_command_button"
+	        android:layout_width="0dp"
+	        android:layout_weight=".7"
+	        android:layout_height="wrap_content"
+	        android:clickable="true"
+	        style="@style/ButtonAppTheme_Yellow"
+	        android:text="@string/voice_command_button" />
+    </LinearLayout>
+    
+    <TextView
+	     android:id="@+id/translated_text_tittle"
+	     android:layout_width="wrap_content"
+	     android:layout_height="wrap_content"
+	     android:layout_marginTop="10dp"
+	     android:text="@string/voice_speech_tittle"
+	     android:layout_below="@id/layout_voice_command_button"
+	     android:enabled="true"/>
+    
+    <TextView
+	     android:id="@+id/translated_text"
+	     android:layout_width="wrap_content"
+	     android:layout_height="wrap_content"
+	     android:layout_marginTop="10dp"
+	     android:text="@string/voice_speech_init"
+	     android:layout_toRightOf="@id/translated_text_tittle"
+	     android:layout_toEndOf="@id/translated_text_tittle"
+	     android:layout_below="@id/layout_voice_command_button"
+	     android:enabled="true"/>
+    
+    <LinearLayout
+        android:id="@+id/layout_teach_mode_button"
+        android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:gravity = "center_horizontal"
+		android:orientation="horizontal"
+		android:layout_marginTop="30dp"
+		android:layout_below="@id/translated_text_tittle"
+		android:weightSum="1.0" >
+	    
+	    <Button
+	        android:id="@+id/teach_mode_button"
+	        android:layout_width="0dp"
+	        android:layout_weight=".7"
+	        android:layout_height="wrap_content"
+	        android:clickable="true"
+	        android:enabled="true"
+	        style="@style/ButtonAppTheme_Pink"
+	        android:text="@string/teaching_mode_button" />
+	</LinearLayout>
 
 </RelativeLayout>

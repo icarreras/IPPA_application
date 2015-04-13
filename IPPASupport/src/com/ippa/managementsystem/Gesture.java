@@ -19,7 +19,7 @@ public class Gesture implements IppaPackageInterface, Parcelable{
 	private final String SEPARATOR = ".";
 	private final String TAG = "GestureObject";
 	
-	public enum Pressure {Light, Medium, High }
+	public enum Pressure {Medium, High }
 	
 	// Position of each finger at the beginning of the gesture
 	private ArrayList<Integer> m_startPosition;
@@ -216,12 +216,12 @@ public class Gesture implements IppaPackageInterface, Parcelable{
 	
 	public void setStartPosition(int finger, int position)
 	{
-		m_startPosition.add(finger, position);
+		m_startPosition.add(finger-1, position);
 	}
 	
 	public void setEndPosition(int finger, int position)
 	{
-		m_endPosition.add(finger, position);
+		m_endPosition.add(finger-1, position);
 	}
 	
 	public void setCurrentFingerFocus(int focus)
