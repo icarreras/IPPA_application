@@ -344,6 +344,7 @@
 		        android:background="@color/IppaDarkGreen"/> 
 	
 	        <RadioGroup
+	            android:id="@+id/radio_group_pressure"
 			    android:layout_width="fill_parent"
 			    android:layout_height="wrap_content"
 			    android:orientation="horizontal">
