@@ -2,11 +2,13 @@ package com.ippa.managementsystem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import com.ippa.R;
 import com.ippa.bluetooth.BluetoothSetup;
 import com.ippa.bluetooth.Constants;
 import com.ippa.bluetooth.DeviceDiscoveryActivity;
+import com.ippa.bluetooth.IppaPackages;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -19,6 +21,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,8 +33,12 @@ public class MainActivity extends Activity {
 	private final int SPEECHNUMBEROFRESULTS = 3; 
 	private final int VOICE_RECOGNITION_REQUEST_CODE = 4232;
 	private final String SPEECHHINT = "Say a command";
+	private final String TAG = "Main Activity";
 	
 	private BluetoothSetup m_bluetoothSetup;
+	private ArrayList<String> m_voiceCommands;
+	private int m_voiceCommandCount;
+	private boolean m_waitingForEndPackage;
 	private TextView m_textViewTranslated;
 	private Button m_buttonVoiceCommand;
 	private Button m_buttonTeachingMode;
@@ -46,7 +53,7 @@ public class MainActivity extends Activity {
 
         // Initialize GUI objects
         m_buttonVoiceCommand  = (Button) findViewById(R.id.voice_command_button);
-        final Button m_buttonTeachingMode = (Button) findViewById(R.id.teach_mode_button);
+        m_buttonTeachingMode = (Button) findViewById(R.id.teach_mode_button);
         final Button buttonConnect = (Button) findViewById(R.id.connect_button);
         
         m_textViewTranslated = (TextView)findViewById(R.id.translated_text);
@@ -58,6 +65,9 @@ public class MainActivity extends Activity {
         // Get reference to the global data (BT)
         m_app = (IppaApplication) getApplicationContext();
         
+        m_voiceCommands = new ArrayList<String>();
+        m_voiceCommandCount = 0;
+        m_waitingForEndPackage = false;
 		m_bluetoothSetup = new BluetoothSetup(MainActivity.this);
         
     	// Verify that the Bluetooth is enabled
@@ -65,7 +75,7 @@ public class MainActivity extends Activity {
 		
 		checkVoiceRecognition();
         
-		//m_buttonVoiceCommand.setEnabled(false);
+		m_buttonVoiceCommand.setEnabled(false);
 		m_buttonVoiceCommand.setOnClickListener(new View.OnClickListener() {
 			
         	@Override
@@ -97,14 +107,25 @@ public class MainActivity extends Activity {
 			}
 		});
         
-		// TODO: m_buttonTeachingMode.setEnabled(false);
+		m_buttonTeachingMode.setEnabled(false);
         m_buttonTeachingMode.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(MainActivity.this, TeachingModeActivity.class);
-				startActivity(intent);
-				
+				AlertDialog.Builder confirmationDialog = new AlertDialog.Builder(MainActivity.this);
+		        confirmationDialog.setMessage(R.string.switch_to_teaching_mode)
+		        .setTitle(R.string.confirm_mode_switch)
+		        .setCancelable(false)
+		        .setNegativeButton(R.string.button_cancel, null)
+		        .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+		           
+		        	public void onClick(DialogInterface dialog, int id) {
+		        		Intent intent = new Intent(MainActivity.this, TeachingModeActivity.class);
+						startActivity(intent);
+		        	}
+		        })
+		        .create()
+		        .show();
 			}
 		});
         
@@ -186,6 +207,8 @@ public class MainActivity extends Activity {
             //m_bluetoothService.connect(m_bluetoothSetup.getDevice(), m_foundUuid);
         }
     	
+        // Request Voice commands
+        m_app.sendViaBluetooth(IppaPackages.getPackageF());
     }  
     
     
@@ -203,6 +226,7 @@ public class MainActivity extends Activity {
 			showToastMessage("Voice recognizer not present");
 		}
 	}
+    
     
     /*
      * This method will receive 
@@ -242,9 +266,6 @@ public class MainActivity extends Activity {
 				startBluetooth();
 				break;
 			}
-			
-			
-			
 			case VOICE_RECOGNITION_REQUEST_CODE:
 			{
 		    //If Voice recognition is successful then it returns RESULT_OK
@@ -254,12 +275,27 @@ public class MainActivity extends Activity {
 				    if (!textMatchList.isEmpty()) 
 				    {
 					    // display the match and send
-				    	String allResults = "";
+				    	String result = null;
 				    	for(String text: textMatchList)
 				    	{
-				    		allResults = allResults + text + " \n";
-				    	}	
-				    	m_textViewTranslated.setText(allResults);
+				    		// verify the translated text matches a known command
+				    		if(m_voiceCommands.contains(text))
+				    		{
+				    			// send the command
+				    			m_app.sendViaBluetooth(IppaPackages.getPackageA(m_voiceCommands.indexOf(text)));
+				    			result = text;
+				    		}
+				    	}
+				    	if(result == null)
+				    	{
+				    		// The translated text didn't match the voice commands
+				    		Log.i(TAG, "The translated text didn't match the voice commands");
+				    		showToastMessage("No matching command found");
+				    	}
+				    	else
+				    	{
+				    		m_textViewTranslated.setText(result);
+				    	}
 				    }
 			    }else if(resultCode == RecognizerIntent.RESULT_AUDIO_ERROR){
 				    showToastMessage("Audio Error");
@@ -299,13 +335,13 @@ public class MainActivity extends Activity {
                     switch (msg.arg1) {
                         case Constants.STATE_CONNECTED:
                         	setStatus(getString(R.string.title_connected_to), Color.GREEN);
+                        	m_buttonVoiceCommand.setEnabled(true);
+                        	m_buttonTeachingMode.setEnabled(true);
                         	break;
                         case Constants.STATE_CONNECTING:
                             setStatus(getString(R.string.title_connecting), Color.YELLOW);
                             break;
                         case Constants.STATE_NONE:
-                        	m_buttonVoiceCommand.setEnabled(true);
-                        	m_buttonTeachingMode.setEnabled(true);
                             setStatus(getString(R.string.title_not_connected), Color.RED);
                             break;
                     }
@@ -321,6 +357,7 @@ public class MainActivity extends Activity {
                     // construct a string from the valid bytes in the buffer
                     // TODO: once a message is READ
                     String readMessage = new String(readBuf, 0, msg.arg1);
+                    processMessageFromBluetooth(readMessage);
                     break;
                 case Constants.MESSAGE_DEVICE_NAME:
                     // display connected toast
@@ -332,6 +369,60 @@ public class MainActivity extends Activity {
             }
         }
     };
+    
+    private void processMessageFromBluetooth(String bluetoothMessage)
+    {
+    	StringTokenizer parser = new StringTokenizer(bluetoothMessage, IppaPackages.SEPARATOR);
+    	Log.i(TAG, "message received from bluetooth: " + bluetoothMessage);
+    	
+    	if(m_waitingForEndPackage)
+    	{
+    		// add the first token to the end of the existing command
+    		String secondPart = parser.nextToken().replace(IppaPackages.ENDOFPACKAGE, "");
+    		String firstPart = m_voiceCommands.get(m_voiceCommandCount);
+    		m_voiceCommands.add(m_voiceCommandCount, firstPart.concat(secondPart));
+    		++m_voiceCommandCount;
+    		processPackageH(parser);
+    	}
+    	else
+    	{
+    		String subPart = parser.nextToken();
+    		int count = Integer.parseInt(parser.nextToken());
+        	
+        	// first package of the message
+    		if(subPart.equals("H"))
+    		{
+    			processPackageH(parser);
+    		}
+    		// TODO : POSSIBLE ADDITION OF PACKAGES
+    		/*else if(subPart.equals("I"))
+    		{
+    			
+    		}*/
+    	}
+    	
+    	m_waitingForEndPackage = !(bluetoothMessage.contains(IppaPackages.ENDOFPACKAGE));
+    }
+    
+    private void processPackageH(StringTokenizer parser)
+    {
+    	while(parser.hasMoreTokens())
+    	{
+    		String temp = parser.nextToken();
+    		if(parser.hasMoreTokens())
+    		{
+    			// the available token is a whole command
+    			m_voiceCommands.add(m_voiceCommandCount, temp);
+    			++m_voiceCommandCount;
+    		}
+    		else
+    		{
+    			// the command was broken into two parts
+    			// remove the end of package
+    			m_voiceCommands.add(m_voiceCommandCount, temp.substring(0, temp.length()-1));
+    		}
+    	}
+    }
     
     void showToastMessage(String message)
 	{

@@ -29,7 +29,7 @@ public class IppaApplication extends Application{
 		m_btService.setHandler(handler);
 	}
     
-    public void sendViaBluetooth(byte[] message)
+    public void sendViaBluetooth(String message)
     {
     	m_btService.write(message);
     }

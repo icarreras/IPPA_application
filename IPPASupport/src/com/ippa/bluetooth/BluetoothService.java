@@ -23,6 +23,7 @@ public class BluetoothService{
 	
     // Member fields
 	private final String TAG = "BT_Service";
+	private final int MAXPACKAGELENGTH = 13;
     private final BluetoothAdapter mAdapter;
     private Handler m_handler;
    // private AcceptThread mSecureAcceptThread; // no need for server side
@@ -157,7 +158,7 @@ public class BluetoothService{
      * @param out The bytes to write
      * @see ConnectedThread#write(byte[])
      */
-    public void write(byte[] out) {
+    public void write(String out) {
         // Create temporary object
         ConnectedThread r;
         // Synchronize a copy of the ConnectedThread
@@ -165,8 +166,28 @@ public class BluetoothService{
             if (mState != Constants.STATE_CONNECTED) return;
             r = mConnectedThread;
         }
-        // Perform the write unsynchronized
-        r.write(out);
+        // Divide each package into 13 bytes -> bluetooth device requirement
+        int loopCount = (out.length()/MAXPACKAGELENGTH);
+        String subpackage = "";
+        for(int i=0; i <= loopCount; i++)
+        {	
+        	try
+        	{
+        		 subpackage = out.substring(i*MAXPACKAGELENGTH, i*MAXPACKAGELENGTH + MAXPACKAGELENGTH);
+        	}
+        	catch(IndexOutOfBoundsException e)
+        	{
+        		subpackage = out.substring(i*MAXPACKAGELENGTH);
+        	}
+        	// Perform the write unsynchronized
+            r.write(subpackage.getBytes());	
+            try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				Log.e(TAG, e.getMessage());
+			}
+        }
     }
 
     /**
@@ -179,6 +200,7 @@ public class BluetoothService{
         bundle.putString(Constants.TOAST, "Unable to connect device");
         msg.setData(bundle);
         m_handler.sendMessage(msg);
+        setState(Constants.STATE_NONE);
     }
 
     /**
@@ -191,6 +213,7 @@ public class BluetoothService{
         bundle.putString(Constants.TOAST, "Device connection was lost");
         msg.setData(bundle);
         m_handler.sendMessage(msg);
+        setState(Constants.STATE_NONE);
     }
 
     

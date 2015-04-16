@@ -8,6 +8,7 @@ import android.os.Parcelable;
 import android.util.Log;
 
 import com.ippa.bluetooth.IppaPackageInterface;
+import com.ippa.bluetooth.IppaPackages;
 
 public class Gesture implements IppaPackageInterface, Parcelable{
 	
@@ -16,10 +17,7 @@ public class Gesture implements IppaPackageInterface, Parcelable{
 	private final int FINGERCOUNT = 5;
 	public final int STARTPOSITION = 1;
 	public final int ENDPOSITION = -1;
-	private final String SEPARATOR = ".";
 	private final String TAG = "GestureObject";
-	
-	public enum Pressure {Medium, High }
 	
 	// Position of each finger at the beginning of the gesture
 	private ArrayList<Integer> m_startPosition;
@@ -79,7 +77,7 @@ public class Gesture implements IppaPackageInterface, Parcelable{
 		ArrayList<Integer> startPosition = new ArrayList<Integer>(FINGERCOUNT);
 		ArrayList<Integer> endPosition = new ArrayList<Integer>(FINGERCOUNT);
 		
-		StringTokenizer parser = new StringTokenizer(gestureInformation, SEPARATOR);
+		StringTokenizer parser = new StringTokenizer(gestureInformation, IppaPackages.SEPARATOR);
 		
 		//int count = parser.countTokens(); // Debugging
 		try
@@ -112,37 +110,37 @@ public class Gesture implements IppaPackageInterface, Parcelable{
 	{
 		if(m_idx != -1)
 		{
-			return (PackageType.A + SEPARATOR +  Integer.toString(m_idx));
+			return (PackageType.A + IppaPackages.SEPARATOR +  Integer.toString(m_idx) + IppaPackages.ENDOFPACKAGE);
 		}
 		return null;
 	}
 
 	@Override
-	public String getPackageB() 
+	public String getPackageB(FingerSelection activeFingers) 
 	{
 		String tmp = PackageType.B.toString();
-		if(m_activeFingers == STARTPOSITION) // Starting position setting
+		if(activeFingers == FingerSelection.Start) // Starting position setting
 		{
-			tmp = tmp + SEPARATOR +  fingerPositionToString(STARTPOSITION);
+			tmp = tmp + IppaPackages.SEPARATOR +  fingerPositionToString(STARTPOSITION);
 		}
-		else if(m_activeFingers == ENDPOSITION) // Ending position setting
+		else if(activeFingers == FingerSelection.End) // Ending position setting
 		{
-			tmp = tmp + SEPARATOR +  fingerPositionToString(ENDPOSITION);
+			tmp = tmp + IppaPackages.SEPARATOR +  fingerPositionToString(ENDPOSITION);
 		}
 		else
 		{
 			Log.e(TAG, "Package B creation, no focus on start/end specified");
 		}
-		return tmp;
+		return (tmp + IppaPackages.ENDOFPACKAGE);
 	}
 
 	@Override
 	public String getPackageC() 
 	{
 		String tmp = PackageType.C.toString();
-		tmp = tmp + SEPARATOR +  fullGestureInfo();
+		tmp = tmp + IppaPackages.SEPARATOR +  fullGestureInfo();
 		
-		return tmp;
+		return (tmp  + IppaPackages.ENDOFPACKAGE);
 	}
 
 	@Override
@@ -150,7 +148,7 @@ public class Gesture implements IppaPackageInterface, Parcelable{
 	{
 		if(m_idx != -1)
 		{
-			return (PackageType.D + SEPARATOR +  Integer.toString(m_idx));
+			return (PackageType.D + IppaPackages.SEPARATOR +  Integer.toString(m_idx) + IppaPackages.ENDOFPACKAGE);
 		}
 		return null;
 	}
@@ -159,28 +157,19 @@ public class Gesture implements IppaPackageInterface, Parcelable{
 	public String getPackageE() 
 	{
 		String tmp = PackageType.E.toString();
-		tmp = tmp + SEPARATOR +  fullGestureInfo();
+		tmp = tmp + IppaPackages.SEPARATOR +  fullGestureInfo();
 		
-		return null;
-	}
-	
-	@Override
-	public ArrayList<Gesture> fromPackageI()
-	{
-		ArrayList<Gesture> gestureFromArm = new ArrayList<Gesture>();
-		//TODO: finish this
-		
-		return gestureFromArm;
+		return (tmp + IppaPackages.ENDOFPACKAGE);
 	}
 
 	
 	private String fullGestureInfo()
 	{
 		String tmp = "";
-		tmp = tmp + SEPARATOR +  Integer.toString(m_idx);
-		tmp = tmp + SEPARATOR +  fingerPositionToString(STARTPOSITION);
-		tmp = tmp + SEPARATOR +  fingerPositionToString(ENDPOSITION);
-		tmp = tmp + SEPARATOR +  m_command + SEPARATOR +  m_pressureAllowed.toString();
+		tmp = tmp + IppaPackages.SEPARATOR +  Integer.toString(m_idx);
+		tmp = tmp + IppaPackages.SEPARATOR +  fingerPositionToString(STARTPOSITION);
+		tmp = tmp + IppaPackages.SEPARATOR +  fingerPositionToString(ENDPOSITION);
+		tmp = tmp + IppaPackages.SEPARATOR +  m_command + IppaPackages.SEPARATOR +  m_pressureAllowed.toString();
 		return tmp;
 	}
 	
@@ -191,14 +180,14 @@ public class Gesture implements IppaPackageInterface, Parcelable{
 		{
 			for(int index=0; index < FINGERCOUNT; index++)
 			{
-				tmp = tmp + SEPARATOR +  Integer.toString(m_startPosition.get(index));
+				tmp = tmp + IppaPackages.SEPARATOR +  Integer.toString(m_startPosition.get(index));
 			}
 		}
 		else if(whichFingers == ENDPOSITION) // end position
 		{
 			for(int index=0; index < FINGERCOUNT; index++)
 			{
-				tmp = tmp + SEPARATOR +  Integer.toString(m_endPosition.get(index));
+				tmp = tmp + IppaPackages.SEPARATOR +  Integer.toString(m_endPosition.get(index));
 			}
 		}
 		return tmp;
@@ -208,8 +197,8 @@ public class Gesture implements IppaPackageInterface, Parcelable{
 	public String toString()
 	{
 		String tmp = fullGestureInfo();
-		tmp = tmp + SEPARATOR +  Boolean.toString(m_storedInArm);
-		tmp = tmp + SEPARATOR + m_name;
+		tmp = tmp + IppaPackages.SEPARATOR +  Boolean.toString(m_storedInArm);
+		tmp = tmp + IppaPackages.SEPARATOR + m_name;
 		
 		return tmp;
 	}

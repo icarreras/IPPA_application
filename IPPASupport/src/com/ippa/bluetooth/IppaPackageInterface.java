@@ -12,11 +12,12 @@ public interface IppaPackageInterface {
 	 * F - Request command strings stored in the arm => list of strings (received)
 	 */
 	public enum PackageType { A, B, C, D, E, F}
+	public enum Pressure {Medium, High };
+	public enum FingerSelection{Start, End};
 	
 	public String getPackageA();
-	public String getPackageB();
+	public String getPackageB(FingerSelection activeFingers);
 	public String getPackageC();
 	public String getPackageD();
 	public String getPackageE();
-	public ArrayList fromPackageI();
 }

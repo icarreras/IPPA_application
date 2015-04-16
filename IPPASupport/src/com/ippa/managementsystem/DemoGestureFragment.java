@@ -69,6 +69,7 @@ public class DemoGestureFragment extends Fragment{
         
     }
 	
+	
 	private AdapterView.OnItemClickListener m_gestureInMobileListener
     	= new AdapterView.OnItemClickListener() {
 
@@ -87,13 +88,13 @@ public class DemoGestureFragment extends Fragment{
 	private AdapterView.OnItemClickListener m_gestureInArmListener
 		= new AdapterView.OnItemClickListener() {
 
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,	long id) {
-		// TODO Auto-generated method stub
-		Gesture gSelected = inArmGestures.get(position);
-		showDialog(gSelected, m_optionsInArm, INARM);
-	}
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,	long id) {
+			// TODO Auto-generated method stub
+			Gesture gSelected = inArmGestures.get(position);
+			showDialog(gSelected, m_optionsInArm, INARM);
+		}
 
-};
+	};
 
 }

@@ -20,6 +20,7 @@
     <string name="connect_button">Connect</string>
     <string name="voice_speech_init"></string>
     <string name="voice_speech_tittle">Command:    </string>
+    <string name="switch_to_teaching_mode">If you continue your IPPA system will switch to Teaching Mode</string>
     
    
 <!-- Teaching Mode Main Activity -->

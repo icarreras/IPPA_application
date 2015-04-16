@@ -1,5 +1,9 @@
 package com.ippa.managementsystem;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import com.ippa.R;
@@ -11,6 +15,7 @@ import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -32,6 +37,8 @@ public class TeachingModeActivity extends FragmentActivity implements ActionBar.
 																		ViewPager.OnPageChangeListener{
 
 	private final String TAG = "Teaching Mode Activity";
+	private final String MOBILEFILE = "inMobileGestures.dat";
+	private final String ARMFILE = "inArmGestures.dat";
 	
 	// Use custom PageAdapter to get correct Fragment based on position 
 	private GestureOptionsCollectionPageAdapter mPageAdapter;
@@ -130,54 +137,111 @@ public class TeachingModeActivity extends FragmentActivity implements ActionBar.
         }
     }
     
-    public void confirmModeSwitch(){
-        AlertDialog.Builder confirmationDialog = new AlertDialog.Builder(TeachingModeActivity.this);
-        confirmationDialog.setMessage(R.string.switch_to_auto_mode);
-        confirmationDialog.setTitle(R.string.confirm_mode_switch);
-        confirmationDialog.setCancelable(false);
-
-        confirmationDialog.setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // Do nothing
-            }
-        });
-
-
-        confirmationDialog.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
+    @Override
+    public void onBackPressed() {
+    	AlertDialog.Builder confirmationDialog = new AlertDialog.Builder(TeachingModeActivity.this);
+        confirmationDialog.setMessage(R.string.switch_to_auto_mode)
+        .setTitle(R.string.confirm_mode_switch)
+        .setCancelable(false)
+        .setNegativeButton(R.string.button_cancel, null)
+        .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+           
+        	public void onClick(DialogInterface dialog, int id) {
             	sendPackageToBluetooth(IppaPackages.getPackageF());
-            }
-        });
-
-        confirmationDialog.create();
-        confirmationDialog.show();
+            	TeachingModeActivity.super.onBackPressed();
+        	}
+        })
+        .create()
+        .show();
     }
 
     private void sendPackageToBluetooth(String message)
     {
-    	m_app.sendViaBluetooth(message.getBytes());
+    	m_app.sendViaBluetooth(message);
+    }
+    
+    /**
+     * Saves the current gestures in mobile
+     */
+    public void saveGestures()
+    {
+        try{
+            ObjectOutputStream objectOutputStreamMobile = new ObjectOutputStream(openFileOutput(MOBILEFILE,Context.MODE_PRIVATE));
+
+            objectOutputStreamMobile.writeObject(m_inMobileGesture);
+            objectOutputStreamMobile.close();
+            
+            ObjectOutputStream objectOutputStreamArm = new ObjectOutputStream(openFileOutput(ARMFILE,Context.MODE_PRIVATE));
+            
+            objectOutputStreamArm.writeObject(m_inArmGesture);
+            objectOutputStreamArm.close();
+
+        }catch (IOException e){
+            Log.e(TAG, "Saving Gestures: " + e.getMessage());
+        	e.printStackTrace();
+        }
+    }
+
+    /**
+     * Load a game based on whether or not loadFile is true, otherwise create new business object
+     * @param loadFile  determines whether or not to load a file from memory
+     */
+    public void loadGestures()
+    {
+        File inMobileFile = getFileStreamPath(MOBILEFILE);
+        File inArmFile = getFileStreamPath(ARMFILE);
+
+        if (inMobileFile != null && inArmFile != null)
+        {
+            try
+            {
+                // try to create input stream
+                ObjectInputStream objectInputStreamMobile = new ObjectInputStream(openFileInput(MOBILEFILE));
+                ObjectInputStream objectInputStreamArm = new ObjectInputStream(openFileInput(MOBILEFILE));
+
+                try 
+                {
+                    // get the lists of gestures
+                    @SuppressWarnings("unchecked")
+					ArrayList<Gesture> objMobile = (ArrayList<Gesture>)objectInputStreamMobile.readObject();                        
+                    objectInputStreamMobile.close();
+
+                    
+                    @SuppressWarnings("unchecked")
+					ArrayList<Gesture> objArm = (ArrayList<Gesture>)objectInputStreamArm.readObject();                        
+                    objectInputStreamArm.close();
+                    
+                    // If no problems make the gestures available
+                    m_inMobileGesture = objMobile;
+                    m_inArmGesture = objArm;
+
+                } catch (ClassNotFoundException e) 
+                {
+                    Log.e(TAG, "Error loading gestures: " + e.getMessage());
+                }
+            } catch (IOException e)
+            {
+            	Log.e(TAG, "Error loading gestures: " + e.getMessage());
+            }
+        }
+        else
+        {
+        	Log.e(TAG, "Error getting the files with the gestures");
+        }
     }
     
 	@Override
-	public void onTabReselected(Tab tab, FragmentTransaction ft) {
-		// TODO Nothing for now, possible refresh (recreation of the fragment)
-		
-	}
+	public void onTabReselected(Tab tab, FragmentTransaction ft) {}
 
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 		// When the tab is selected, switch to the
         // corresponding page in the ViewPager.
         mViewPager.setCurrentItem(tab.getPosition());
-
-		
 	}
 
 	@Override
-	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-		// not used
-		
-	}
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) {}
 
 	@Override
 	public void onPageScrollStateChanged(int arg0) {
@@ -208,6 +272,8 @@ public class TeachingModeActivity extends FragmentActivity implements ActionBar.
 	@Override
 	public void onDestroy()
 	{
+		sendPackageToBluetooth(IppaPackages.getPackageF());
+		saveGestures();
 		super.onDestroy();
 		// inform system that teaching mode is over
 		// do not disconnect

@@ -11,12 +11,14 @@ import android.os.Bundle;
 import android.util.Log;
 
 public class DemoGestureDialogFragment extends DialogFragment{ 
-	private final int OPTIONCHECKED = -1;
 	
+	// Mobile options
 	private final int MOBILE_EDIT = 0;
 	private final int MOBILE_MOVETOARM = 1;
 	private final int MOBILE_DELETE = 2;
 	private final int MOBILE_PLAY = 3;
+	
+	// In arm options
 	private final int ARM_TRANSFER = 0;
 	private final int ARM_TRIGGER = 1;
 	private final int ARM_DELETE = 2;
@@ -51,18 +53,12 @@ public class DemoGestureDialogFragment extends DialogFragment{
 		
 		m_app = (IppaApplication) getActivity().getApplicationContext();
 		
+		Log.i(TAG, "This is the parced and recover gesture: " + m_gesture.toString());
+		
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 	   
 		// Add action buttons
 	    builder.setTitle(R.string.dialog_title_options)
-	    	/*.setPositiveButton("testBT", new DialogInterface.OnClickListener() 
-	    	{
-	               @Override
-	               public void onClick(DialogInterface dialog, int id) 
-	               {
-	                   // sign in the user ...
-	               }
-	           })*/
            .setItems(optionsToDisplay,  listener)
            .setNegativeButton("cancel", new DialogInterface.OnClickListener() 
            {
@@ -84,12 +80,12 @@ public class DemoGestureDialogFragment extends DialogFragment{
      	   {
      		   case MOBILE_EDIT:
      			   Log.i(TAG, "Edit is not implemented yet");
+     			   // TODO: Switch to the create tab and pass the gesture as a parcel
      			   break;
      		   case MOBILE_DELETE:
-     			   // TODO: Call the custom method in the activity to delete from there
+     			   ((TeachingModeActivity)getActivity()).deleteGestureInMobile(which);
      			   break;
      		   case MOBILE_MOVETOARM:
-     			   // TODO: get bytes from gesture
      			   sendMessageToArm("C");
      			   break;
      		   case MOBILE_PLAY:
@@ -118,7 +114,6 @@ public class DemoGestureDialogFragment extends DialogFragment{
      			   sendMessageToArm("D");
      			   break;
      	   }
-     		   
         }
 	};
 	
@@ -145,6 +140,6 @@ public class DemoGestureDialogFragment extends DialogFragment{
 		{
 			Log.e(TAG, "This type of message has not been implemented");
 		}
-		m_app.sendViaBluetooth(message.getBytes());
+		m_app.sendViaBluetooth(message);
 	}
 }
