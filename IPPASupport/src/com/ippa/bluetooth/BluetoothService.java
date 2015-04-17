@@ -181,6 +181,8 @@ public class BluetoothService{
         	}
         	// Perform the write unsynchronized
             r.write(subpackage.getBytes());	
+            
+            Log.i(TAG, "Sending: " +subpackage);
             try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
@@ -308,11 +310,15 @@ public class BluetoothService{
         private final BluetoothSocket m_socket;
         private final InputStream mmInStream;
         private final OutputStream mmOutStream;
+    	private String m_tempPackage;
+    	private boolean m_waitingForEndPackage;
 
         public ConnectedThread(BluetoothSocket socket, String socketType) {
             m_socket = socket;
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
+            m_tempPackage = null;
+            m_waitingForEndPackage = false;
 
             // Get the BluetoothSocket input and output streams
             try {
@@ -336,10 +342,45 @@ public class BluetoothService{
                 try {
                     // Read from the InputStream
                     bytes = mmInStream.read(buffer);
+                	
+                    Log.i(TAG, "Message received: " + new String(buffer, 0, 100));
+                    String readMessage = new String(buffer, 0, bytes);
+                    
+                    if(m_waitingForEndPackage)
+                	{
+                    	m_tempPackage = m_tempPackage.concat(readMessage);
+                    	Log.i(TAG, "temp package: " + m_tempPackage);
+                    	if(readMessage.contains(IppaPackages.ENDOFPACKAGE))
+                        {	
+                    		
+                    		// Send the obtained bytes to the UI Activity
+                    		m_handler.obtainMessage(Constants.MESSAGE_READ, m_tempPackage.length(), -1, m_tempPackage.getBytes())
+                            .sendToTarget();
+                        }
+                    	else
+                    	{
+                    		m_waitingForEndPackage = true;
+                    	}
+                	}
+                	else 
+                	{
+                		// New package (whole or partial)
+                		m_tempPackage = readMessage;
+                		Log.i(TAG, "temp package: " + m_tempPackage);
+                		if(readMessage.contains(IppaPackages.ENDOFPACKAGE))
+                		{
+                			// Send the obtained bytes to the UI Activity
+                			m_handler.obtainMessage(Constants.MESSAGE_READ, m_tempPackage.length(), -1, m_tempPackage.getBytes())
+                            .sendToTarget();
+                		}
+                		else
+                    	{
+                    		m_waitingForEndPackage = true;
+                    	}
+                	}       
 
                     // Send the obtained bytes to the UI Activity
-                    m_handler.obtainMessage(Constants.MESSAGE_READ, bytes, -1, buffer)
-                            .sendToTarget();
+                    
                 } catch (IOException e) {
                 	Log.e(TAG, "Couldn't read from in stream: Connection Lost");
                 	Log.e(TAG, e.toString());

@@ -148,16 +148,16 @@ public class CreateGestureFragment extends Fragment{
 				}
 				
 				// Save the gesture in the phone
-				boolean status = saveGestureToPhone(m_createdGesture.toString());
+				saveGestureToPhone(m_createdGesture);
 				
-				if(status)
+				/*if(status)
 				{
 					showToastMessage(m_createdGesture.getGestureName()+ " was saved");
 				}
 				else
 				{
 					showToastMessage("Error: could not save the " + m_createdGesture.getGestureName()+ " gesture");
-				}
+				}*/
 			}
 			
 		});
@@ -371,11 +371,10 @@ public class CreateGestureFragment extends Fragment{
 		m_app.sendViaBluetooth(message);
 	}
 	
-	private boolean saveGestureToPhone(String gesture)
+	private void saveGestureToPhone(Gesture gesture)
 	{
-		//   TODO:
-		
-		return false;
+		((TeachingModeActivity)getActivity()).addGestureToMobile(gesture);;
+
 	}
 	
 	private void saveFingerPositions(IppaPackageInterface.FingerSelection selection)

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import junit.framework.Assert;
+
 import com.ippa.R;
 import com.ippa.bluetooth.BluetoothSetup;
 import com.ippa.bluetooth.Constants;
@@ -37,8 +39,6 @@ public class MainActivity extends Activity {
 	
 	private BluetoothSetup m_bluetoothSetup;
 	private ArrayList<String> m_voiceCommands;
-	private int m_voiceCommandCount;
-	private boolean m_waitingForEndPackage;
 	private TextView m_textViewTranslated;
 	private Button m_buttonVoiceCommand;
 	private Button m_buttonTeachingMode;
@@ -66,8 +66,6 @@ public class MainActivity extends Activity {
         m_app = (IppaApplication) getApplicationContext();
         
         m_voiceCommands = new ArrayList<String>();
-        m_voiceCommandCount = 0;
-        m_waitingForEndPackage = false;
 		m_bluetoothSetup = new BluetoothSetup(MainActivity.this);
         
     	// Verify that the Bluetooth is enabled
@@ -206,9 +204,6 @@ public class MainActivity extends Activity {
         	m_app.connectToDevice(m_bluetoothSetup.getDevice());
             //m_bluetoothService.connect(m_bluetoothSetup.getDevice(), m_foundUuid);
         }
-    	
-        // Request Voice commands
-        m_app.sendViaBluetooth(IppaPackages.getPackageF());
     }  
     
     
@@ -278,6 +273,7 @@ public class MainActivity extends Activity {
 				    	String result = null;
 				    	for(String text: textMatchList)
 				    	{
+				    		m_textViewTranslated.setText(text + " ");
 				    		// verify the translated text matches a known command
 				    		if(m_voiceCommands.contains(text))
 				    		{
@@ -335,6 +331,11 @@ public class MainActivity extends Activity {
                     switch (msg.arg1) {
                         case Constants.STATE_CONNECTED:
                         	setStatus(getString(R.string.title_connected_to), Color.GREEN);
+                        	
+                        	// Request Voice commands
+                            m_app.sendViaBluetooth(IppaPackages.getPackageF());
+                            Log.i(TAG, "Requested voice commands from IPPA");
+                            
                         	m_buttonVoiceCommand.setEnabled(true);
                         	m_buttonTeachingMode.setEnabled(true);
                         	break;
@@ -356,8 +357,11 @@ public class MainActivity extends Activity {
                     byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
                     // TODO: once a message is READ
+                    Log.i(TAG, "arg1: " + msg.arg1);
+                    Log.i(TAG, "message : " + new String(readBuf, 0, msg.arg1));
                     String readMessage = new String(readBuf, 0, msg.arg1);
                     processMessageFromBluetooth(readMessage);
+                    
                     break;
                 case Constants.MESSAGE_DEVICE_NAME:
                     // display connected toast
@@ -372,56 +376,36 @@ public class MainActivity extends Activity {
     
     private void processMessageFromBluetooth(String bluetoothMessage)
     {
-    	StringTokenizer parser = new StringTokenizer(bluetoothMessage, IppaPackages.SEPARATOR);
     	Log.i(TAG, "message received from bluetooth: " + bluetoothMessage);
+    	bluetoothMessage = bluetoothMessage.substring(0, bluetoothMessage.length()-1);
+    	StringTokenizer parser = new StringTokenizer(bluetoothMessage, IppaPackages.SEPARATOR);
     	
-    	if(m_waitingForEndPackage)
-    	{
-    		// add the first token to the end of the existing command
-    		String secondPart = parser.nextToken().replace(IppaPackages.ENDOFPACKAGE, "");
-    		String firstPart = m_voiceCommands.get(m_voiceCommandCount);
-    		m_voiceCommands.add(m_voiceCommandCount, firstPart.concat(secondPart));
-    		++m_voiceCommandCount;
-    		processPackageH(parser);
-    	}
-    	else
-    	{
-    		String subPart = parser.nextToken();
-    		int count = Integer.parseInt(parser.nextToken());
-        	
-        	// first package of the message
-    		if(subPart.equals("H"))
-    		{
-    			processPackageH(parser);
-    		}
-    		// TODO : POSSIBLE ADDITION OF PACKAGES
-    		/*else if(subPart.equals("I"))
-    		{
-    			
-    		}*/
-    	}
-    	
-    	m_waitingForEndPackage = !(bluetoothMessage.contains(IppaPackages.ENDOFPACKAGE));
+		String subPart = parser.nextToken();
+		
+    	// first package of the message
+		if(subPart.equals("H"))
+		{
+			processPackageH(parser);
+		}
+		// TODO : POSSIBLE ADDITION OF PACKAGES
+		/*else if(subPart.equals("I"))
+		{
+			
+		}*/
+
     }
     
     private void processPackageH(StringTokenizer parser)
     {
+    	int countInBT = Integer.parseInt(parser.nextToken());
+    	int count =0; 
     	while(parser.hasMoreTokens())
     	{
     		String temp = parser.nextToken();
-    		if(parser.hasMoreTokens())
-    		{
-    			// the available token is a whole command
-    			m_voiceCommands.add(m_voiceCommandCount, temp);
-    			++m_voiceCommandCount;
-    		}
-    		else
-    		{
-    			// the command was broken into two parts
-    			// remove the end of package
-    			m_voiceCommands.add(m_voiceCommandCount, temp.substring(0, temp.length()-1));
-    		}
+			// the available token is a whole command
+			m_voiceCommands.add(count++, temp);
     	}
+    	Assert.assertEquals("Expected number of gestures does not match the process number of gestures",countInBT, count);
     }
     
     void showToastMessage(String message)

@@ -1,5 +1,6 @@
 package com.ippa.managementsystem;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
@@ -10,9 +11,9 @@ import android.util.Log;
 import com.ippa.bluetooth.IppaPackageInterface;
 import com.ippa.bluetooth.IppaPackages;
 
-public class Gesture implements IppaPackageInterface, Parcelable{
+public class Gesture implements IppaPackageInterface, Parcelable, Serializable{
 	
-	
+	private static final long serialVersionUID = 1L;
 	private final int DEFAULT = 0;
 	private final int FINGERCOUNT = 5;
 	public final int STARTPOSITION = 1;

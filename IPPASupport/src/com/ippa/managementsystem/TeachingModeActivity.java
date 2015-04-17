@@ -178,7 +178,7 @@ public class TeachingModeActivity extends FragmentActivity implements ActionBar.
 
         }catch (IOException e){
             Log.e(TAG, "Saving Gestures: " + e.getMessage());
-        	e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
@@ -359,8 +359,9 @@ public class TeachingModeActivity extends FragmentActivity implements ActionBar.
 	
 	public void addGestureToArm(Gesture gesture)
 	{
-		// TODO: must be sent to the arm
 		m_inArmGesture.add(gesture);
+		m_app.sendViaBluetooth(gesture.getPackageC());
+		Log.i(TAG, "Sent gesture to the arm");
 	}
 	
 	public boolean deleteGestureInArm(int position)
