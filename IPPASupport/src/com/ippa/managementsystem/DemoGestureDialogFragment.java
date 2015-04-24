@@ -87,6 +87,7 @@ public class DemoGestureDialogFragment extends DialogFragment{
      			   break;
      		   case MOBILE_MOVETOARM:
      			   sendMessageToArm("C");
+     			  ((TeachingModeActivity)getActivity()).addGestureToArm(m_gesture);
      			   break;
      		   case MOBILE_PLAY:
      			   sendMessageToArm("E");

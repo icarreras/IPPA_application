@@ -99,6 +99,8 @@
 	     android:layout_width="wrap_content"
 	     android:layout_height="wrap_content"
 	     android:layout_marginTop="10dp"
+	     android:layout_marginStart="7dp"
+	     android:layout_marginLeft="7dp"
 	     android:text="@string/voice_speech_init"
 	     android:layout_toRightOf="@id/translated_text_tittle"
 	     android:layout_toEndOf="@id/translated_text_tittle"

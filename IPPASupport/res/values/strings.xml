@@ -28,6 +28,9 @@
     <string name="title_activity_teaching_mode">Teaching Mode</string>
     <string name="switch_to_auto_mode">If you continue you will leave the Teaching Mode, your IPPA system will
         switch to Autonomous Mode</string>
+    <string name="title_ippa_full">Could not save the gesture</string>
+    <string name="dialog_ippa_full_text">Your IPPA is at full capacity. You must delete
+        a gesture before proceeding to save a new one</string>
    
 <!-- Demo Gesture Fragment Demo-->
 	<string name="title_fragment_demo_gesture">Demo Gesture</string>

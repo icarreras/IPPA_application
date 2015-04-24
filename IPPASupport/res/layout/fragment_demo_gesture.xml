@@ -3,17 +3,18 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/demo_fragment"
     android:orientation="vertical">
 	<TextView
 	    android:id="@+id/tittle_in_mobile"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:background="@color/IppaMediumPink"
+	    android:background="@color/IppaLightYellow"
 	    android:paddingLeft="5dp"
 	    android:paddingRight="5dp"
 	    android:paddingTop="5dp"
 	    android:text="@string/title_demo_inmobile"
-	    android:textColor="@color/White"
+	    android:textColor="@color/IppaDarkYellow"
 	    android:textSize="18sp"
 	    android:textStyle="bold"/>
 	
@@ -21,9 +22,11 @@
 	    android:id="@+id/mobile_gestures"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:layout_weight="1"
-	    android:divider="@color/IppaPink"
+		android:layout_weight="1"
+	    android:divider="@color/IppaDarkYellow"
 	    android:dividerHeight="5dp"
+	    android:textAppearance="?android:attr/textAppearanceLarge"
+	    android:textSize="24sp"
 	    android:listSelector="@drawable/apptheme_green_list_selector_holo_light"
 	    />
 	
@@ -31,12 +34,12 @@
 	    android:id="@+id/title_in_arm"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:background="@color/IppaMediumPink"
+	    android:background="@color/IppaLightYellow"
 	    android:paddingLeft="5dp"
 	    android:paddingRight="5dp"
 	    android:paddingTop="5dp"
 	    android:text="@string/title_demo_inarm"
-	    android:textColor="@color/White"
+	    android:textColor="@color/IppaDarkYellow"
 	    android:textSize="18sp"
 	    android:textStyle="bold"
 	    />
@@ -46,7 +49,7 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_weight="1"
-	    android:divider="@color/IppaPink"
+	    android:divider="@color/IppaDarkYellow"
 	    android:dividerHeight="5dp"
 	    android:listSelector="@drawable/apptheme_green_list_selector_holo_light"
 	    />

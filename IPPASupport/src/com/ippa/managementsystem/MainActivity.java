@@ -118,6 +118,7 @@ public class MainActivity extends Activity {
 		        .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
 		           
 		        	public void onClick(DialogInterface dialog, int id) {
+		        		m_app.sendViaBluetooth(IppaPackages.getPackageG());
 		        		Intent intent = new Intent(MainActivity.this, TeachingModeActivity.class);
 						startActivity(intent);
 		        	}
@@ -344,6 +345,8 @@ public class MainActivity extends Activity {
                             break;
                         case Constants.STATE_NONE:
                             setStatus(getString(R.string.title_not_connected), Color.RED);
+                            m_buttonVoiceCommand.setEnabled(false);
+                        	m_buttonTeachingMode.setEnabled(false);
                             break;
                     }
                     break;
@@ -352,13 +355,14 @@ public class MainActivity extends Activity {
                     // construct a string from the buffer
                     // TODO: once a message is written
                     String writeMessage = new String(writeBuf);
+                    Log.i(TAG, "message sent: " + writeMessage);
                     break;
                 case Constants.MESSAGE_READ:
                     byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
                     // TODO: once a message is READ
-                    Log.i(TAG, "arg1: " + msg.arg1);
-                    Log.i(TAG, "message : " + new String(readBuf, 0, msg.arg1));
+                    //Log.i(TAG, "arg1: " + msg.arg1);
+                   // Log.i(TAG, "message read: " + new String(readBuf, 0, msg.arg1));
                     String readMessage = new String(readBuf, 0, msg.arg1);
                     processMessageFromBluetooth(readMessage);
                     

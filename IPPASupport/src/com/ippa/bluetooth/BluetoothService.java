@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.UUID;
 
 import android.bluetooth.BluetoothAdapter;
@@ -166,30 +167,9 @@ public class BluetoothService{
             if (mState != Constants.STATE_CONNECTED) return;
             r = mConnectedThread;
         }
-        // Divide each package into 13 bytes -> bluetooth device requirement
-        int loopCount = (out.length()/MAXPACKAGELENGTH);
-        String subpackage = "";
-        for(int i=0; i <= loopCount; i++)
-        {	
-        	try
-        	{
-        		 subpackage = out.substring(i*MAXPACKAGELENGTH, i*MAXPACKAGELENGTH + MAXPACKAGELENGTH);
-        	}
-        	catch(IndexOutOfBoundsException e)
-        	{
-        		subpackage = out.substring(i*MAXPACKAGELENGTH);
-        	}
-        	// Perform the write unsynchronized
-            r.write(subpackage.getBytes());	
-            
-            Log.i(TAG, "Sending: " +subpackage);
-            try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				Log.e(TAG, e.getMessage());
-			}
-        }
+    	// Perform the write unsynchronized
+        r.write(out);	
+      
     }
 
     /**
@@ -340,10 +320,11 @@ public class BluetoothService{
             // Keep listening to the InputStream while connected
             while (true) {
                 try {
+                	
                     // Read from the InputStream
                     bytes = mmInStream.read(buffer);
                 	
-                    Log.i(TAG, "Message received: " + new String(buffer, 0, 100));
+                    //Log.i(TAG, "Message received: " + new String(buffer, 0, 100));
                     String readMessage = new String(buffer, 0, bytes);
                     
                     if(m_waitingForEndPackage)
@@ -377,9 +358,9 @@ public class BluetoothService{
                     	{
                     		m_waitingForEndPackage = true;
                     	}
-                	}       
-
-                    // Send the obtained bytes to the UI Activity
+                	} 
+                    // clear buffer for next read
+                   // Arrays.fill(buffer, "\0".getBytes()[0]);
                     
                 } catch (IOException e) {
                 	Log.e(TAG, "Couldn't read from in stream: Connection Lost");
@@ -396,16 +377,41 @@ public class BluetoothService{
          *
          * @param buffer The bytes to write
          */
-        public void write(byte[] buffer) {
-            try {
-                mmOutStream.write(buffer);
+        public void write(String buffer) {
+        	// Divide each package into 13 bytes -> bluetooth device requirement
+            int loopCount = (buffer.length()/MAXPACKAGELENGTH);
+            String subpackage = "";
+            
+            for(int i=0; i <= loopCount; i++)
+            {	
+            	try
+            	{
+            		 subpackage = buffer.substring(i*MAXPACKAGELENGTH, i*MAXPACKAGELENGTH + MAXPACKAGELENGTH);
+            	}
+            	catch(IndexOutOfBoundsException e)
+            	{
+            		subpackage = buffer.substring(i*MAXPACKAGELENGTH);
+            	}
+            	
+                Log.i(TAG, "Sending: " +subpackage);
+            	try {
+                    mmOutStream.write(subpackage.getBytes());
 
-                // Share the sent message back to the UI Activity
-                m_handler.obtainMessage(Constants.MESSAGE_WRITE, -1, -1, buffer)
-                        .sendToTarget();
-            } catch (IOException e) {
-                e.printStackTrace();
+                    // Share the sent message back to the UI Activity
+                    m_handler.obtainMessage(Constants.MESSAGE_WRITE, -1, -1, subpackage.getBytes())
+                            .sendToTarget();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            	
+                try {
+    				Thread.sleep(5);
+    			} catch (InterruptedException e) {
+    				// TODO Auto-generated catch block
+    				Log.e(TAG, e.getMessage());
+    			}
             }
+            
         }
 
         public void cancel() {

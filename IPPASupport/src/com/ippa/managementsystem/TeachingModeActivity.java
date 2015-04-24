@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 import com.ippa.R;
 import com.ippa.bluetooth.Constants;
@@ -78,35 +79,33 @@ public class TeachingModeActivity extends FragmentActivity implements ActionBar.
         			.setText(mPageAdapter.getPageTitle(i))
         			.setTabListener(this));
         }
-    	
-        
-        // GESTURE LOADING
 
     	m_inMobileGesture = new ArrayList<Gesture>();
     	m_inArmGesture = new ArrayList<Gesture>();
     	
-    	// TODO: Load the gestures stored in the phone
-    	// TODO: Load the gestures stored in the arm
-    	Gesture g1 = new Gesture();
-    	g1.setGestureName("Gesture1");
-    	Gesture g2 = new Gesture();
-    	g2.setGestureName("Grab 1");
-    	g2.setGestureIdx(0);
-    	Gesture g3 = new Gesture();
-    	g3.setGestureName("Grab 2");
-    	g3.setGestureIdx(1);
-    	Gesture g4 = new Gesture();
-    	g4.setGestureName("Grab 3");
-    	g4.setGestureIdx(2);
+    	// GESTURE LOADING
+        loadGestures();
     	
-    	// Add them to the list
-    	m_inMobileGesture.add(g1);
-    	m_inArmGesture.add(g2);
-    	m_inArmGesture.add(g3);
-    	m_inArmGesture.add(g4);
-    	
-    	
-        
+        if(m_inArmGesture.size() == 0)
+        {
+	    	Gesture g2 = new Gesture();
+	    	g2.setGestureName("Point");
+	    	g2.setGestureIdx(0);
+	    	g2.setEndPosition(1, 180);
+	    	g2.setEndPosition(3, 180);
+	    	g2.setEndPosition(4, 180);
+	    	g2.setEndPosition(5, 180);
+	    	Gesture g3 = new Gesture();
+	    	g3.setGestureName("Peace");
+	    	g3.setGestureIdx(0);
+	    	g3.setEndPosition(1, 180);
+	    	g3.setEndPosition(4, 180);
+	    	g3.setEndPosition(5, 180);
+	    	
+	    	// Add them to the list
+	    	m_inArmGesture.add(g2);
+	    	m_inArmGesture.add(g3);
+        }    	
 	}
 	
 	 @Override
@@ -171,10 +170,14 @@ public class TeachingModeActivity extends FragmentActivity implements ActionBar.
             objectOutputStreamMobile.writeObject(m_inMobileGesture);
             objectOutputStreamMobile.close();
             
+            Log.i(TAG, "Save the mobile gestures to the file");
+            
             ObjectOutputStream objectOutputStreamArm = new ObjectOutputStream(openFileOutput(ARMFILE,Context.MODE_PRIVATE));
             
             objectOutputStreamArm.writeObject(m_inArmGesture);
             objectOutputStreamArm.close();
+            
+            Log.i(TAG, "Save the arm gestures to the file");
 
         }catch (IOException e){
             Log.e(TAG, "Saving Gestures: " + e.getMessage());
@@ -193,11 +196,12 @@ public class TeachingModeActivity extends FragmentActivity implements ActionBar.
 
         if (inMobileFile != null && inArmFile != null)
         {
+        	Log.i(TAG + " loading", "Files were found");
             try
             {
                 // try to create input stream
                 ObjectInputStream objectInputStreamMobile = new ObjectInputStream(openFileInput(MOBILEFILE));
-                ObjectInputStream objectInputStreamArm = new ObjectInputStream(openFileInput(MOBILEFILE));
+                ObjectInputStream objectInputStreamArm = new ObjectInputStream(openFileInput(ARMFILE));
 
                 try 
                 {
@@ -206,6 +210,7 @@ public class TeachingModeActivity extends FragmentActivity implements ActionBar.
 					ArrayList<Gesture> objMobile = (ArrayList<Gesture>)objectInputStreamMobile.readObject();                        
                     objectInputStreamMobile.close();
 
+                    Log.i(TAG + " loading", "array list object interpretet. First gesture in it:" + objMobile.get(0).toString());
                     
                     @SuppressWarnings("unchecked")
 					ArrayList<Gesture> objArm = (ArrayList<Gesture>)objectInputStreamArm.readObject();                        
@@ -305,10 +310,12 @@ public class TeachingModeActivity extends FragmentActivity implements ActionBar.
                     //mConversationArrayAdapter.add("Me:  " + writeMessage);
                     break;
                 case Constants.MESSAGE_READ:
-                    byte[] readBuf = (byte[]) msg.obj;
-                    // construct a string from the valid bytes in the buffer
-                    String readMessage = new String(readBuf, 0, msg.arg1);
-                    //mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + readMessage);
+                	byte[] readBuf = (byte[]) msg.obj;
+                	//Log.i(TAG, "arg1: " + msg.arg1);
+                    // Log.i(TAG, "message read: " + new String(readBuf, 0, msg.arg1));
+                     String readMessage = new String(readBuf, 0, msg.arg1);
+                     processMessageFromBluetooth(readMessage);
+                    
                     break;
                 case Constants.MESSAGE_DEVICE_NAME:
                     // save the connected device's name
@@ -327,6 +334,32 @@ public class TeachingModeActivity extends FragmentActivity implements ActionBar.
             }
         }
     }; 
+    
+    private void processMessageFromBluetooth(String bluetoothMessage)
+    {
+    	Log.i(TAG, "message received from bluetooth: " + bluetoothMessage);
+    	bluetoothMessage = bluetoothMessage.substring(0, bluetoothMessage.length()-1);
+    	StringTokenizer parser = new StringTokenizer(bluetoothMessage, IppaPackages.SEPARATOR);
+    	
+		String subPart = parser.nextToken();
+		
+    	// first package of the message
+		if(subPart.equals("I"))
+		{
+			processPackageI();
+		}
+	}
+    
+    private void processPackageI()
+    {
+    	// Display a dialog
+    	AlertDialog.Builder confirmationDialog = new AlertDialog.Builder(TeachingModeActivity.this);
+        confirmationDialog.setMessage(R.string.dialog_ippa_full_text)
+        .setTitle(R.string.title_ippa_full)
+        .setPositiveButton(R.string.button_ok, null)
+        .create()
+        .show();
+    }
 	
 	public ArrayList<Gesture> getGesturesInMobile()
 	{
@@ -338,9 +371,18 @@ public class TeachingModeActivity extends FragmentActivity implements ActionBar.
 		return m_inArmGesture;
 	}
 	
-	public void addGestureToMobile(Gesture gesture)
+	public boolean addGestureToMobile(Gesture gesture)
 	{
-		m_inMobileGesture.add(gesture);
+		m_inMobileGesture.add(gesture); 
+		String tag = "android:switcher:" + R.id.pager + ":0";
+		DemoGestureFragment fragment = (DemoGestureFragment) getSupportFragmentManager().findFragmentByTag(tag);;
+		
+		if(fragment != null)  // could be null if not instantiated yet
+	    {
+			fragment.updateLists(); 
+			return true;
+	    }
+		return false;
 	}
 	
 	public boolean deleteGestureInMobile(int position)
@@ -362,6 +404,14 @@ public class TeachingModeActivity extends FragmentActivity implements ActionBar.
 		m_inArmGesture.add(gesture);
 		m_app.sendViaBluetooth(gesture.getPackageC());
 		Log.i(TAG, "Sent gesture to the arm");
+		
+		String tag = "android:switcher:" + R.id.pager + ":0";
+		DemoGestureFragment fragment = (DemoGestureFragment) getSupportFragmentManager().findFragmentByTag(tag);
+		
+		if(fragment != null)  // could be null if not instantiated yet
+	    {
+			fragment.updateLists(); 
+	    }
 	}
 	
 	public boolean deleteGestureInArm(int position)

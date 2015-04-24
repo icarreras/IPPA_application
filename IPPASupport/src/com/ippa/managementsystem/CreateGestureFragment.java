@@ -2,6 +2,8 @@ package com.ippa.managementsystem;
 
 import java.util.ArrayList;
 
+import junit.framework.Assert;
+
 import com.ippa.R;
 import com.ippa.bluetooth.IppaPackageInterface;
 
@@ -115,8 +117,12 @@ public class CreateGestureFragment extends Fragment{
 				
 				m_textGestureName.setText("");
 				m_textVoiceCommand.setText("");
-				m_checkboxChangeDefault.setSelected(false);
+				//m_checkboxChangeDefault.setSelected(false);
 				m_radiogroupPressure.clearCheck();
+				
+				if(m_checkboxChangeDefault.isChecked()){
+					m_checkboxChangeDefault.toggle();
+	            }
 				
 				showStartFingerSeekBars(false);
 				resetAllSeekBars();
@@ -149,6 +155,8 @@ public class CreateGestureFragment extends Fragment{
 				
 				// Save the gesture in the phone
 				saveGestureToPhone(m_createdGesture);
+				
+				showToastMessage("Gesture: " + m_createdGesture.getGestureName() + " has been saved");
 				
 				/*if(status)
 				{
@@ -373,27 +381,29 @@ public class CreateGestureFragment extends Fragment{
 	
 	private void saveGestureToPhone(Gesture gesture)
 	{
-		((TeachingModeActivity)getActivity()).addGestureToMobile(gesture);;
+		boolean status = ((TeachingModeActivity)getActivity()).addGestureToMobile(gesture);
+		Assert.assertEquals(true, status);
 
 	}
 	
 	private void saveFingerPositions(IppaPackageInterface.FingerSelection selection)
 	{
+		int invertValue = 180;
 		if(selection == IppaPackageInterface.FingerSelection.Start)
 		{
-			m_createdGesture.setStartPosition(1, m_startPos_1.getProgress());
-			m_createdGesture.setStartPosition(2, m_startPos_2.getProgress());
-			m_createdGesture.setStartPosition(3, m_startPos_3.getProgress());
-			m_createdGesture.setStartPosition(4, m_startPos_4.getProgress());
-			m_createdGesture.setStartPosition(5, m_startPos_5.getProgress());
+			m_createdGesture.setStartPosition(1, invertValue - m_startPos_1.getProgress());
+			m_createdGesture.setStartPosition(2, invertValue - m_startPos_2.getProgress());
+			m_createdGesture.setStartPosition(3, invertValue - m_startPos_3.getProgress());
+			m_createdGesture.setStartPosition(4, invertValue - m_startPos_4.getProgress());
+			m_createdGesture.setStartPosition(5, invertValue - m_startPos_5.getProgress());
 		}
 		else if(selection == IppaPackageInterface.FingerSelection.End)
 		{
-			m_createdGesture.setEndPosition(1, m_endPos_1.getProgress());
-			m_createdGesture.setEndPosition(2, m_endPos_2.getProgress());
-			m_createdGesture.setEndPosition(3, m_endPos_3.getProgress());
-			m_createdGesture.setEndPosition(4, m_endPos_4.getProgress());
-			m_createdGesture.setEndPosition(5, m_endPos_5.getProgress());
+			m_createdGesture.setEndPosition(1, invertValue - m_endPos_1.getProgress());
+			m_createdGesture.setEndPosition(2, invertValue - m_endPos_2.getProgress());
+			m_createdGesture.setEndPosition(3, invertValue - m_endPos_3.getProgress());
+			m_createdGesture.setEndPosition(4, invertValue - m_endPos_4.getProgress());
+			m_createdGesture.setEndPosition(5, invertValue - m_endPos_5.getProgress());
 		}
 	}
 	
